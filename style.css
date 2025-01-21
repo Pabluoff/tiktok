@@ -183,6 +183,7 @@ body {
     color: rgba(255, 255, 255, 0.8);
     cursor: pointer;
     padding: 0.5rem;
+    margin-bottom: 17px;
 }
 
 .nav-item.active {
