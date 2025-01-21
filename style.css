@@ -40,6 +40,11 @@ body {
     display: flex;
     align-items: center;
     gap: 0.25rem;
+    transition: color 0.2s ease;
+}
+
+.nav-buttons button:hover {
+    color: white;
 }
 
 .nav-buttons button.active {
@@ -92,17 +97,44 @@ body {
     left: 0;
     right: 0;
     padding: 1rem;
+    background: linear-gradient(transparent, rgba(0,0,0,0.4));
 }
 
 .video-info .username {
     font-weight: bold;
     margin-bottom: 0.5rem;
     font-size: 1.1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.follow-button {
+    background: #FE2C55;
+    border: none;
+    color: white;
+    padding: 0.25rem 1rem;
+    border-radius: 4px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.follow-button:hover {
+    background: #e91c43;
 }
 
 .video-info .description {
     font-size: 0.9rem;
     max-width: 80%;
+    margin-bottom: 0.5rem;
+}
+
+.video-info .hashtags {
+    color: #FE2C55;
+    font-size: 0.9rem;
+    margin-bottom: 0.5rem;
 }
 
 .video-info .music {
@@ -111,6 +143,15 @@ body {
     gap: 0.5rem;
     margin-top: 0.5rem;
     font-size: 0.9rem;
+}
+
+.music-icon {
+    animation: rotate 4s linear infinite;
+}
+
+@keyframes rotate {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
 }
 
 .video-actions {
@@ -137,6 +178,15 @@ body {
     align-items: center;
     justify-content: center;
     cursor: pointer;
+    transition: transform 0.2s ease;
+}
+
+.action-button .icon-container:hover {
+    transform: scale(1.1);
+}
+
+.action-button .icon-container:active {
+    transform: scale(0.95);
 }
 
 .action-button .count {
@@ -152,6 +202,12 @@ body {
     border: 2px solid white;
     overflow: hidden;
     margin-bottom: 0.5rem;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+}
+
+.user-profile:hover {
+    transform: scale(1.1);
 }
 
 .user-profile img {
@@ -184,6 +240,11 @@ body {
     cursor: pointer;
     padding: 0.5rem;
     margin-bottom: 17px;
+    transition: color 0.2s ease;
+}
+
+.nav-item:hover {
+    color: white;
 }
 
 .nav-item.active {
@@ -200,6 +261,11 @@ body {
     border-radius: 8px;
     margin: -0.5rem 0;
     position: relative;
+    transition: transform 0.2s ease;
+}
+
+.create-button .plus-icon:hover {
+    transform: scale(1.1);
 }
 
 .create-button .plus-icon::before {
@@ -209,15 +275,24 @@ body {
     left: -2px;
     right: -2px;
     bottom: -2px;
-    background: transparent;
-    border-radius: 10px;
+background: transparent;    border-radius: 10px;
     z-index: -1;
 }
 
+/* Desktop Styles */
 @media (min-width: 768px) {
+    body {
+        background-color: #121212;
+    }
+
     .feed {
         max-width: 420px;
         margin: 0 auto;
+        border-radius: 8px;
+        overflow: hidden;
+        height: calc(100vh - 32px);
+        margin-top: 16px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
     }
     
     .top-nav, .bottom-nav {
@@ -226,4 +301,60 @@ body {
         left: 50%;
         transform: translateX(-50%);
     }
+
+    .top-nav {
+        border-radius: 8px 8px 0 0;
+        background: black;
+    }
+
+    .bottom-nav {
+        border-radius: 0 0 8px 8px;
+    }
+
+    .video-container {
+        height: calc(100vh - 32px);
+    }
+
+    .video-container video {
+        border-radius: 0;
+    }
+
+    .video-info {
+        padding: 1.5rem;
+    }
+
+    .video-actions {
+        right: 1.5rem;
+    }
+
+    .action-button .icon-container {
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 50%;
+        width: 52px;
+        height: 52px;
+    }
+
+    .action-button .count {
+        font-size: 0.85rem;
+    }
+}
+
+/* Animations */
+@keyframes heartBeat {
+    0% { transform: scale(1); }
+    14% { transform: scale(1.3); }
+    28% { transform: scale(1); }
+    42% { transform: scale(1.3); }
+    70% { transform: scale(1); }
+}
+
+.liked .icon-container svg {
+    color: #FE2C55;
+    fill: #FE2C55;
+    animation: heartBeat 1.3s ease-in-out;
+}
+
+.bookmarked .icon-container svg {
+    fill: #FFFC00;
+    color: #FFFC00;
 }
