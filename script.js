@@ -1,9 +1,9 @@
 const videos = [
     {
         url: 'https://assets.mixkit.co/videos/preview/mixkit-girl-in-neon-sign-1232-large.mp4',
-        username: 'DGSOficial',
-        description: '😅',
-        hashtags: '#challenge #viral',
+        username: 'jnnknj',
+        description: 'Rasparia teu cabelo por 50mil reais em dinheiro? 💰 😅',
+        hashtags: '#dinheiro #challenge #viral',
         music: 'som original - dgs.oficiall',
         likes: '167,5 mil',
         comments: '14,8 mil',
@@ -13,9 +13,9 @@ const videos = [
     },
     {
         url: 'https://assets.mixkit.co/videos/preview/mixkit-tree-with-yellow-flowers-1173-large.mp4',
-        username: '@nature_vibes',
-        description: '🌸',
-        hashtags: '#nature #beautiful',
+        username: 'oooooo',
+        description: '🌸 Spring is here!',
+        hashtags: '#nature #beautiful #spring',
         music: 'som original - nature.vibes',
         likes: '223,4 mil',
         comments: '18,2 mil',
