@@ -482,3 +482,77 @@
     }
   }
   
+  .comment-modal {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: #1f1f1f;
+    border-radius: 16px 16px 0 0;
+    height: 70vh;
+    transform: translateY(100%);
+    transition: transform 0.3s ease-in-out;
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+}
+
+.comment-modal.active {
+    transform: translateY(0);
+}
+
+.comment-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+    z-index: 999;
+}
+
+.comment-overlay.active {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.comment-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.comment-count {
+    font-weight: 600;
+}
+
+.comment-close {
+    background: none;
+    border: none;
+    color: white;
+    cursor: pointer;
+    padding: 0.5rem;
+}
+
+.comments-container {
+    flex: 1;
+    overflow-y: auto;
+    padding: 1rem;
+}
+
+@media (min-width: 768px) {
+    .comment-modal {
+        max-width: 420px;
+        left: 50%;
+        transform: translate(-50%, 100%);
+    }
+
+    .comment-modal.active {
+        transform: translate(-50%, 0);
+    }
+}

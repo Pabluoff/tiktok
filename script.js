@@ -8,7 +8,7 @@ const videos = [
         music: 'som original - dgs.oficiall',
         likes: '167.5K',
         comments: '14.8K',
-        bookmarks: '4.165K',
+        bookmarks: '4.1K',
         shares: '14.2K',
         userProfile: 'https://images.unsplash.com/photo-1633332755192-727a05c4013d?w=64&h=64&fit=crop'
     },
@@ -21,7 +21,7 @@ const videos = [
         music: 'som original - nature.vibes',
         likes: '223.4K',
         comments: '18.2K',
-        bookmarks: '5.234K',
+        bookmarks: '5.2K',
         shares: '20.1K',
         userProfile: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=64&h=64&fit=crop'
     }
@@ -141,42 +141,35 @@ function initializeFeed() {
         }
     });
 
-// Função para lidar com ações (como like, bookmark, etc.)
+
 function handleAction(action, button, isDoubleClick = false) {
     const count = button.querySelector('.count');
+    const videoContainer = button.closest('.video-container');
+    const videoIndex = Array.from(videoContainer.parentNode.children).indexOf(videoContainer);
+    const video = videos[videoIndex];
 
     switch (action) {
         case 'like':
             if (!isDoubleClick) {
-                // Se o botão NÃO está curtido, marcar como curtido e incrementar os likes
                 if (!button.classList.contains('liked')) {
-                    button.classList.add('liked');  // Marca o botão como curtido
-                    let currentLikes = parseInt(count.textContent.replace(/[^0-9]/g, ''));  // Remove a parte 'K'
-
-                    // Verifica se o número de likes é inferior a 1K antes de incrementar
+                    button.classList.add('liked');
+                    let currentLikes = parseInt(count.textContent.replace(/[^0-9]/g, ''));
                     if (currentLikes < 1000) {
-                        count.textContent = currentLikes + 1;  // Incrementa os likes sem o formato 'K'
+                        count.textContent = currentLikes + 1;
                     }
-                }
-                // Se o botão já está curtido, desmarcar e decrementar os likes
-                else {
-                    button.classList.remove('liked');  // Desmarcar o botão como curtido
-                    let currentLikes = parseInt(count.textContent.replace(/[^0-9]/g, ''));  // Remove a parte 'K'
-
-                    // Verifica se o número de likes é inferior a 1K antes de decrementar
+                } else {
+                    button.classList.remove('liked');
+                    let currentLikes = parseInt(count.textContent.replace(/[^0-9]/g, ''));
                     if (currentLikes < 1000) {
-                        count.textContent = currentLikes - 1;  // Decrementa os likes sem o formato 'K'
+                        count.textContent = currentLikes - 1;
                     }
                 }
             } else {
-                // Duplo clique não desmarca, apenas incrementa a contagem de likes
                 if (!button.classList.contains('liked')) {
-                    button.classList.add('liked');  // Marca o botão como curtido
-                    let currentLikes = parseInt(count.textContent.replace(/[^0-9]/g, ''));  // Remove a parte 'K'
-
-                    // Verifica se o número de likes é inferior a 1K antes de incrementar
+                    button.classList.add('liked');
+                    let currentLikes = parseInt(count.textContent.replace(/[^0-9]/g, ''));
                     if (currentLikes < 1000) {
-                        count.textContent = currentLikes + 1;  // Incrementa os likes sem o formato 'K'
+                        count.textContent = currentLikes + 1;
                     }
                 }
             }
@@ -185,17 +178,104 @@ function handleAction(action, button, isDoubleClick = false) {
             button.classList.toggle('bookmarked');
             break;
         case 'share':
-            const videoContainer = button.closest('.video-container');
-            const videoIndex = Array.from(videoContainer.parentNode.children).indexOf(videoContainer);
-            handleShare(videos[videoIndex]);
+            handleShare(video);
             break;
         case 'comment':
-            // Implementar a funcionalidade de comentário, se necessário
+            handleComment(video);
             break;
     }
 }
 
-// Função para detecção de duplo clique (double-tap) e marcação de like
+function handleComment(video) {
+    const commentModal = document.createElement('div');
+    commentModal.className = 'comment-modal';
+
+    const commentOverlay = document.createElement('div');
+    commentOverlay.className = 'comment-overlay';
+
+    commentModal.innerHTML = `
+        <div class="comment-header">
+            <span class="comment-count">${video.comments} comentários</span>
+            <button class="comment-close">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+            </button>
+        </div>
+        <div class="comments-container">
+            <div class="vip-message">
+                <div class="vip-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M2 20h20"/>
+                        <path d="m5.5 12.5 4-4c1-1 2.7-1 3.7 0l4.3 4"/>
+                        <path d="m18 12.7-1.2-1.2c-1-1-2.7-1-3.7 0L10 14.6"/>
+                    </svg>
+                </div>
+                <h3>Exclusivo para VIPs </h3>
+                <p>Você deve ser VIP para fazer comentários</p>
+            </div>
+        </div>
+    `;
+
+    document.body.appendChild(commentOverlay);
+    document.body.appendChild(commentModal);
+
+    requestAnimationFrame(() => {
+        commentOverlay.classList.add('active');
+        commentModal.classList.add('active');
+    });
+
+    const closeButton = commentModal.querySelector('.comment-close');
+    const closeModal = () => {
+        commentOverlay.classList.remove('active');
+        commentModal.classList.remove('active');
+        setTimeout(() => {
+            commentOverlay.remove();
+            commentModal.remove();
+        }, 300);
+    };
+
+    closeButton.addEventListener('click', closeModal);
+    commentOverlay.addEventListener('click', (e) => {
+        if (e.target === commentOverlay) {
+            closeModal();
+        }
+    });
+}
+
+const style = document.createElement('style');
+style.textContent = `
+    .vip-message {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        padding: 2rem;
+        height: 100%;
+        color: white;
+    }
+
+    .vip-icon {
+        margin-bottom: 0.3rem;
+        color: #FE2C55;
+    }
+
+    .vip-message h3 {
+        font-size: 1.65rem;
+        margin-bottom: 0.5rem;
+        color: #FE2C55;
+    }
+
+    .vip-message p {
+        font-size: 0.9rem;
+        margin-bottom: 1.5rem;
+        color: rgba(255, 255, 255, 0.67);
+    }
+
+`;
+document.head.appendChild(style);
 let lastTap = 0;
 document.addEventListener('touchstart', (e) => {
     const video = e.target.closest('video');
@@ -204,40 +284,34 @@ document.addEventListener('touchstart', (e) => {
     const currentTime = Date.now();
     const tapLength = currentTime - lastTap;
 
-    // Detecta o duplo clique (dentro de 300ms)
     if (tapLength < 300 && tapLength > 0) {
         const container = video.closest('.video-container');
         const likeButton = container.querySelector('[data-action="like"]');
 
         if (likeButton) {
-            handleAction('like', likeButton, true);  // Passando true para indicar que é um duplo clique
+            handleAction('like', likeButton, true); 
         }
 
-        // Obtém a posição do toque
         const touchX = e.changedTouches[0].clientX;
         const touchY = e.changedTouches[0].clientY;
 
-        // Cria o ícone de coração (utilizando Ionicons)
         const heart = document.createElement('ion-icon');
         heart.name = 'heart';
         heart.classList.add('heart-icon');
         document.body.appendChild(heart);
 
-        // Posiciona o ícone de coração no local do toque
-        heart.style.left = `${touchX - 25}px`;  // Ajusta para alinhamento central
-        heart.style.top = `${touchY - 25}px`;   // Ajusta para alinhamento central
+        heart.style.left = `${touchX - 25}px`; 
+        heart.style.top = `${touchY - 25}px`;  
 
-        // Anima o coração
         setTimeout(() => {
             heart.classList.add('animate-heart');
         }, 0);
 
-        // Remove o ícone de coração após a animação
         setTimeout(() => {
             heart.remove();
         }, 1000);
 
-        e.preventDefault();  // Impede a ação padrão para evitar a propagação de eventos
+        e.preventDefault(); 
     }
 
     lastTap = currentTime;
@@ -248,7 +322,6 @@ function handleFollow(button) {
     button.textContent = button.textContent === 'Seguir' ? 'Seguindo' : 'Seguir';
     button.classList.toggle('following');
 }
-// Add this function to handle share functionality
 function handleShare(video) {
     const shareMenu = document.createElement('div');
     shareMenu.className = 'share-menu';
@@ -312,13 +385,11 @@ function handleShare(video) {
     document.body.appendChild(shareOverlay);
     document.body.appendChild(shareMenu);
 
-    // Show menu with animation
     requestAnimationFrame(() => {
         shareOverlay.classList.add('active');
         shareMenu.classList.add('active');
     });
 
-    // Handle share option clicks
     shareMenu.querySelectorAll('.share-option').forEach(option => {
         option.addEventListener('click', () => {
             const platform = option.dataset.platform;
@@ -326,7 +397,6 @@ function handleShare(video) {
         });
     });
 
-    // Handle copy link
     const copyButton = shareMenu.querySelector('.copy-button');
     const linkInput = shareMenu.querySelector('input');
 
@@ -336,7 +406,6 @@ function handleShare(video) {
         showToast('Link copiado!');
     });
 
-    // Close menu
     const closeButton = shareMenu.querySelector('.share-menu-close');
     const closeMenu = () => {
         shareOverlay.classList.remove('active');
