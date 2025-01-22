@@ -123,12 +123,14 @@ function initializeFeed() {
       isInteracting = true;
       subProgressBar.classList.add('interacting');
       updateProgress(event);
+      document.body.style.overflow = 'hidden';
     };
 
     const stopInteraction = () => {
       if (isInteracting) {
         isInteracting = false;
         subProgressBar.classList.remove('interacting');
+        document.body.style.overflow = '';
       }
     };
 
