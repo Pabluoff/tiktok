@@ -460,7 +460,7 @@
 .heart-icon {
     position: absolute;
     font-size: 80px; 
-    color: red;
+    color: #FE2C55;
     pointer-events: none;
     z-index: 9999;
     transform: scale(0);
