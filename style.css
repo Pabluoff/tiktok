@@ -483,7 +483,7 @@
   /* Toast notification */
   .toast {
     position: fixed;
-    bottom: 20px;
+    top: 60px;
     left: 50%;
     transform: translateX(-50%);
     background: rgba(0, 0, 0, 0.8);
@@ -519,10 +519,9 @@
     pointer-events: none;
     z-index: 9999;
     transform: scale(0);
-    animation: heartAnimation 1s ease-out;
+    animation: heartAnimation 1.6s ease-out;
   }
   
-  /* Heart animation effect */
   @keyframes heartAnimation {
     0% {
       transform: scale(0) translateY(0);
@@ -533,8 +532,8 @@
       opacity: 0.6;
     }
     100% {
-      transform: scale(0) translateY(-100px);
-      opacity: 0;
+      transform: scale(0) translateY(-900px);
+      opacity: 0.2;
     }
   }
   
