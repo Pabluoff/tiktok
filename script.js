@@ -142,18 +142,43 @@ function initializeFeed() {
     });
 
 // Função para lidar com ações (como like, bookmark, etc.)
-function handleAction(action, button) {
+function handleAction(action, button, isDoubleClick = false) {
+    const count = button.querySelector('.count');
+
     switch (action) {
         case 'like':
-            // Marcar como curtido se ainda não estiver marcado
-            if (!button.classList.contains('liked')) {
-                button.classList.add('liked');  // Marca o botão como curtido
-                const count = button.querySelector('.count');
-                let currentLikes = parseInt(count.textContent.replace(/[^0-9]/g, ''));  // Remove a parte 'K'
-                currentLikes = currentLikes * 1000;  // Convertendo o contador de "K" para número real
+            if (!isDoubleClick) {
+                // Se o botão NÃO está curtido, marcar como curtido e incrementar os likes
+                if (!button.classList.contains('liked')) {
+                    button.classList.add('liked');  // Marca o botão como curtido
+                    let currentLikes = parseInt(count.textContent.replace(/[^0-9]/g, ''));  // Remove a parte 'K'
 
-                // Incrementar a contagem de likes
-                count.textContent = `${(currentLikes + 1) / 1000}K`;  // Incrementando e ajustando a unidade 'K'
+                    // Verifica se o número de likes é inferior a 1K antes de incrementar
+                    if (currentLikes < 1000) {
+                        count.textContent = currentLikes + 1;  // Incrementa os likes sem o formato 'K'
+                    }
+                }
+                // Se o botão já está curtido, desmarcar e decrementar os likes
+                else {
+                    button.classList.remove('liked');  // Desmarcar o botão como curtido
+                    let currentLikes = parseInt(count.textContent.replace(/[^0-9]/g, ''));  // Remove a parte 'K'
+
+                    // Verifica se o número de likes é inferior a 1K antes de decrementar
+                    if (currentLikes < 1000) {
+                        count.textContent = currentLikes - 1;  // Decrementa os likes sem o formato 'K'
+                    }
+                }
+            } else {
+                // Duplo clique não desmarca, apenas incrementa a contagem de likes
+                if (!button.classList.contains('liked')) {
+                    button.classList.add('liked');  // Marca o botão como curtido
+                    let currentLikes = parseInt(count.textContent.replace(/[^0-9]/g, ''));  // Remove a parte 'K'
+
+                    // Verifica se o número de likes é inferior a 1K antes de incrementar
+                    if (currentLikes < 1000) {
+                        count.textContent = currentLikes + 1;  // Incrementa os likes sem o formato 'K'
+                    }
+                }
             }
             break;
         case 'bookmark':
@@ -185,7 +210,7 @@ document.addEventListener('touchstart', (e) => {
         const likeButton = container.querySelector('[data-action="like"]');
 
         if (likeButton) {
-            handleAction('like', likeButton);
+            handleAction('like', likeButton, true);  // Passando true para indicar que é um duplo clique
         }
 
         // Obtém a posição do toque
@@ -217,31 +242,6 @@ document.addEventListener('touchstart', (e) => {
 
     lastTap = currentTime;
 });
-}
-
-// Update the handleAction function
-function handleAction(action, button) {
-    switch (action) {
-        case 'like':
-            button.classList.toggle('liked');
-            const count = button.querySelector('.count');
-            const currentLikes = parseInt(count.textContent.replace(/[^0-9]/g, ''));
-            count.textContent = button.classList.contains('liked')
-                ? `${currentLikes + 1}K`
-                : `${currentLikes - 1}K`;
-            break;
-        case 'bookmark':
-            button.classList.toggle('bookmarked');
-            break;
-        case 'share':
-            const videoContainer = button.closest('.video-container');
-            const videoIndex = Array.from(videoContainer.parentNode.children).indexOf(videoContainer);
-            handleShare(videos[videoIndex]);
-            break;
-        case 'comment':
-            // Implement comment functionality
-            break;
-    }
 }
 
 function handleFollow(button) {
