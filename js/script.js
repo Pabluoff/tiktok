@@ -33,7 +33,11 @@ function createVideoElement(video) {
 
     container.innerHTML = `
       <video src="${video.url}" loop muted playsinline></video>
-      <div class="progress-bar"></div>
+     <div class="sub-progress-bar">
+       <div class="progress-bar">
+         <div class="progress-dot"></div>
+       </div>
+     </div>
       <div class="video-info">
         <div class="username">
           ${video.username}
@@ -96,37 +100,96 @@ function createVideoElement(video) {
 
 function initializeFeed() {
   const feed = document.getElementById('feed');
-  videos.forEach(video => {
-      const videoElement = createVideoElement(video);
-      feed.appendChild(videoElement);
 
-      const videoTag = videoElement.querySelector('video');
-      const progressBar = videoElement.querySelector('.progress-bar');
+  videos.forEach((video) => {
+    const videoElement = createVideoElement(video);
+    feed.appendChild(videoElement);
 
-      videoTag.addEventListener('timeupdate', () => {
-          const percentage = (videoTag.currentTime / videoTag.duration) * 100;
-          progressBar.style.width = `${percentage}%`;
-      });
+    const videoTag = videoElement.querySelector('video');
+    const subProgressBar = videoElement.querySelector('.sub-progress-bar');
+    const progressBar = videoElement.querySelector('.progress-bar');
+    const progressDot = videoElement.querySelector('.progress-dot');
+
+    // Atualizar a barra e o "dot" com o progresso do vídeo
+    videoTag.addEventListener('timeupdate', () => {
+      const percentage = (videoTag.currentTime / videoTag.duration) * 100;
+      progressBar.style.width = `${percentage}%`;
+      progressDot.style.transform = `translate(${percentage}%, -50%)`;
+    });
+
+    let isInteracting = false;
+
+    const startInteraction = (event) => {
+      isInteracting = true;
+      subProgressBar.classList.add('interacting');
+      updateProgress(event);
+    };
+
+    const stopInteraction = () => {
+      if (isInteracting) {
+        isInteracting = false;
+        subProgressBar.classList.remove('interacting');
+      }
+    };
+
+    const updateProgress = (event) => {
+      if (!isInteracting) return;
+
+      const rect = subProgressBar.getBoundingClientRect();
+      const offsetX = event.touches ? event.touches[0].clientX : event.clientX; 
+      const percentage = Math.max(0, Math.min(1, (offsetX - rect.left) / rect.width));
+
+      videoTag.currentTime = percentage * videoTag.duration;
+      progressBar.style.width = `${percentage * 100}%`;
+      progressDot.style.transform = `translate(${percentage * 100}%, -50%)`;
+    };
+
+    subProgressBar.addEventListener('mousedown', startInteraction);
+    subProgressBar.addEventListener('mousemove', updateProgress);
+    document.addEventListener('mouseup', stopInteraction);
+
+    subProgressBar.addEventListener('touchstart', startInteraction);
+    subProgressBar.addEventListener('touchmove', updateProgress);
+    document.addEventListener('touchend', stopInteraction);
+
+    // Ajustar opacidade ao tocar ou rolar
+    videoTag.addEventListener('touchstart', () => {
+      subProgressBar.style.opacity = '0.5';
+    });
+
+    videoTag.addEventListener('touchend', () => {
+      subProgressBar.style.opacity = '1';
+    });
+
+    videoElement.addEventListener('scroll', () => {
+      subProgressBar.style.opacity = '0.5';
+      clearTimeout(videoElement.scrollTimeout);
+
+      // Restaurar opacidade após rolagem
+      videoElement.scrollTimeout = setTimeout(() => {
+        subProgressBar.style.opacity = '1';
+      }, 300);
+    });
   });
 
   const observer = new IntersectionObserver(
-      (entries) => {
-          entries.forEach(entry => {
-              const video = entry.target.querySelector('video');
-              if (entry.isIntersecting) {
-                  video.play();
-              } else {
-                  video.pause();
-              }
-          });
-      },
-      { threshold: 0.6 }
+    (entries) => {
+      entries.forEach((entry) => {
+        const video = entry.target.querySelector('video');
+        if (entry.isIntersecting) {
+          video.play();
+        } else {
+          video.pause();
+        }
+      });
+    },
+    { threshold: 0.5 } 
   );
-
-  document.querySelectorAll('.video-container').forEach(container => {
-      observer.observe(container);
+  
+  document.querySelectorAll('.video-container').forEach((container) => {
+    observer.observe(container);
   });
-
+  
     // Handle interactions
     document.addEventListener('click', (e) => {
         const video = e.target.closest('video');

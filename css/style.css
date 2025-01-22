@@ -92,15 +92,46 @@ body {
   object-fit: cover;
 }
 
-.progress-bar {
+.sub-progress-bar {
   position: absolute;
   bottom: 0;
   left: 0;
-  height: 2px;
+  width: 100%;
+  height: 4px;
+  background: rgba(255, 255, 255, 0.3); 
+  z-index: 9999;
+  opacity: 1; 
+  transition: opacity 0.3s ease;
+  cursor: pointer;
+}
+
+.progress-bar {
+  position: absolute;
+  height: 100%;
   width: 0;
   background: #FE2C55;
   transition: width 0.1s;
-  z-index: 99;
+}
+
+.progress-dot {
+  position: absolute;
+  top: 50%;
+  right: 0;
+  width: 8px;
+  height: 8px;
+  background: #FE2C55;
+  border-radius: 50%;
+  transform: translate(50%, -50%);
+  transition: transform 0.1s ease;
+}
+
+.sub-progress-bar.interacting .progress-bar {
+  background: #ff597a;
+}
+
+.sub-progress-bar.interacting .progress-dot {
+  width: 12px;
+  height: 12px;
 }
 
 .video-info {
