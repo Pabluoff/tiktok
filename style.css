@@ -89,7 +89,7 @@
   
   .video-container video {
     width: 100%;
-    height: 100%;
+    height: calc(100% - 90px);
     object-fit: cover;
   }
   
@@ -292,61 +292,6 @@
     70% { transform: scale(1); }
   }
   
-  @media (min-width: 768px) {
-    body {
-      background-color: #121212;
-    }
-  
-    .feed {
-      max-width: 420px;
-      margin: 0 auto;
-      border-radius: 8px;
-      overflow: hidden;
-      height: calc(100vh - 32px);
-      margin-top: 16px;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
-    }
-  
-    .top-nav,
-    .bottom-nav {
-      max-width: 420px;
-      margin: 0 auto;
-      left: 50%;
-      transform: translateX(-50%);
-    }
-  
-    .top-nav {
-      border-radius: 8px 8px 0 0;
-      background: black;
-    }
-  
-    .bottom-nav {
-      border-radius: 0 0 8px 8px;
-    }
-  
-    .video-container {
-      height: calc(100vh - 32px);
-    }
-  
-    .video-info {
-      padding: 1.5rem;
-    }
-  
-    .video-actions {
-      right: 1.5rem;
-    }
-  
-    .action-button .icon-container {
-      background: rgba(255, 255, 255, 0.1);
-      border-radius: 50%;
-      width: 52px;
-      height: 52px;
-    }
-  
-    .action-button .count {
-      font-size: 0.85rem;
-    }
-  }
 
   .share-menu {
     position: fixed;
