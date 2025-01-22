@@ -33,6 +33,7 @@ function createVideoElement(video) {
 
     container.innerHTML = `
       <video src="${video.url}" loop muted playsinline></video>
+      <div class="progress-bar"></div>
       <div class="video-info">
         <div class="username">
           ${video.username}
@@ -94,28 +95,37 @@ function createVideoElement(video) {
 }
 
 function initializeFeed() {
-    const feed = document.getElementById('feed');
-    videos.forEach(video => {
-        feed.appendChild(createVideoElement(video));
-    });
+  const feed = document.getElementById('feed');
+  videos.forEach(video => {
+      const videoElement = createVideoElement(video);
+      feed.appendChild(videoElement);
 
-    const observer = new IntersectionObserver(
-        (entries) => {
-            entries.forEach(entry => {
-                const video = entry.target.querySelector('video');
-                if (entry.isIntersecting) {
-                    video.play();
-                } else {
-                    video.pause();
-                }
-            });
-        },
-        { threshold: 0.6 }
-    );
+      const videoTag = videoElement.querySelector('video');
+      const progressBar = videoElement.querySelector('.progress-bar');
 
-    document.querySelectorAll('.video-container').forEach(container => {
-        observer.observe(container);
-    });
+      videoTag.addEventListener('timeupdate', () => {
+          const percentage = (videoTag.currentTime / videoTag.duration) * 100;
+          progressBar.style.width = `${percentage}%`;
+      });
+  });
+
+  const observer = new IntersectionObserver(
+      (entries) => {
+          entries.forEach(entry => {
+              const video = entry.target.querySelector('video');
+              if (entry.isIntersecting) {
+                  video.play();
+              } else {
+                  video.pause();
+              }
+          });
+      },
+      { threshold: 0.6 }
+  );
+
+  document.querySelectorAll('.video-container').forEach(container => {
+      observer.observe(container);
+  });
 
     // Handle interactions
     document.addEventListener('click', (e) => {
