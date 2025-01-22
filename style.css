@@ -24,8 +24,6 @@
     right: 0;
     z-index: 100;
     padding: 0.5rem;
-    background: linear-gradient(to bottom, rgba(0, 0, 0, 0.8) 0%, transparent 100%);
-    backdrop-filter: blur(8px);
   }
   
   .nav-buttons {
@@ -88,6 +86,9 @@
   }
   
   .video-container video {
+    position: absolute;
+    top: 0;
+    bottom: 0;
     width: 100%;
     height: calc(100% - 90px);
     object-fit: cover;
@@ -163,7 +164,7 @@
   .video-actions {
     position: absolute;
     right: 0.75rem;
-    bottom: 6rem;
+    bottom: 7rem;
     display: flex;
     flex-direction: column;
     gap: 1.25rem;
@@ -237,16 +238,18 @@
   }
   
   .bottom-nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #000000;
+    width: 100%;
+    height: 90px;
     position: fixed;
     bottom: 0;
-    left: 0;
-    right: 0;
-    background-color: rgb(0, 0, 0);
-    padding: 0.5rem;
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
-    z-index: 100;
+    z-index: 1000;
+    box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.3);
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 0 15px;
   }
   
   .nav-item {
@@ -259,8 +262,9 @@
     color: rgba(255, 255, 255, 0.7);
     cursor: pointer;
     padding: 0.5rem;
-    margin-bottom: 1rem;
     transition: color 0.2s ease;
+    margin-bottom: 30px;
+    padding: 0 9px;
   }
   
   .nav-item.active {
