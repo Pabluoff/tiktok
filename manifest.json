@@ -3,8 +3,8 @@
     "short_name": "CandyPacks",
     "start_url": "",
     "display": "standalone",
-    "background_color": "#0b0b0c",
-    "theme_color": "#0b0b0c",
+    "background_color": "rgba(0, 0, 0, 0)",
+    "theme_color": "rgba(0, 0, 0, 0)",
     "icons": [
       {
         "src": "/img/logo-192size.jpg",
