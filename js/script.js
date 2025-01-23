@@ -100,6 +100,7 @@ function createVideoElement(video) {
 
 function initializeFeed() {
   const feed = document.getElementById('feed');
+  let isInteracting = false; // Variável global para saber se alguma barra está sendo manipulada
 
   videos.forEach((video) => {
     const videoElement = createVideoElement(video);
@@ -117,13 +118,16 @@ function initializeFeed() {
       progressDot.style.transform = `translate(${percentage}%, -50%)`;
     });
 
-    let isInteracting = false;
-
     const startInteraction = (event) => {
       isInteracting = true;
       subProgressBar.classList.add('interacting');
       updateProgress(event);
       feed.style.overflowY = 'hidden';
+
+      // Certifique-se de que todas as barras fiquem visíveis
+      document.querySelectorAll('.sub-progress-bar').forEach((bar) => {
+        bar.style.opacity = '1';
+      });
     };
 
     const stopInteraction = () => {
@@ -138,7 +142,7 @@ function initializeFeed() {
       if (!isInteracting) return;
 
       const rect = subProgressBar.getBoundingClientRect();
-      const offsetX = event.touches ? event.touches[0].clientX : event.clientX; 
+      const offsetX = event.touches ? event.touches[0].clientX : event.clientX;
       const percentage = Math.max(0, Math.min(1, (offsetX - rect.left) / rect.width));
 
       videoTag.currentTime = percentage * videoTag.duration;
@@ -153,25 +157,24 @@ function initializeFeed() {
     subProgressBar.addEventListener('touchstart', startInteraction);
     subProgressBar.addEventListener('touchmove', updateProgress);
     document.addEventListener('touchend', stopInteraction);
+  });
 
-    // Ajustar opacidade ao tocar ou rolar
-    videoTag.addEventListener('touchstart', () => {
-      subProgressBar.style.opacity = '0.5';
-    });
+  // Ajustar opacidade ao rolar, mas não enquanto a barra está sendo manipulada
+  feed.addEventListener('scroll', () => {
+    if (!isInteracting) {
+      document.querySelectorAll('.sub-progress-bar').forEach((bar) => {
+        bar.style.opacity = '0';
+      });
 
-    videoTag.addEventListener('touchend', () => {
-      subProgressBar.style.opacity = '1';
-    });
-
-    videoElement.addEventListener('scroll', () => {
-      subProgressBar.style.opacity = '0.5';
-      clearTimeout(videoElement.scrollTimeout);
+      clearTimeout(feed.scrollTimeout);
 
       // Restaurar opacidade após rolagem
-      videoElement.scrollTimeout = setTimeout(() => {
-        subProgressBar.style.opacity = '1';
+      feed.scrollTimeout = setTimeout(() => {
+        document.querySelectorAll('.sub-progress-bar').forEach((bar) => {
+          bar.style.opacity = '1';
+        });
       }, 300);
-    });
+    }
   });
 
   const observer = new IntersectionObserver(

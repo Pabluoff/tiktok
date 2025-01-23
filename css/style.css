@@ -155,7 +155,7 @@ body {
 .follow-button {
   background: #FE2C55;
   border: none;
-  color: white;
+  color: #ffffff;
   padding: 0.25rem 1rem;
   border-radius: 4px;
   font-size: 0.9rem;
@@ -302,7 +302,7 @@ body {
   gap: 0.25rem;
   background: none;
   border: none;
-  color: rgba(255, 255, 255, 0.7);
+  color: #ffffffb3;
   cursor: pointer;
   padding: 0.5rem;
   transition: color 0.2s ease;
