@@ -4,10 +4,10 @@ const videos = [
         url: './img/modelo2.MP4',
         username: 'Michelly Cardoso',
         description: 'Será que desse ângulo fica bom? 🤭',
-        hashtags: '#CandyPacks #Viral #Trendy',
-        music: 'som original - dgs.oficiall',
-        likes: '167.5K',
-        comments: '14.8K',
+        hashtags: '#Fyp #Viral #Trendy',
+        music: 'som original - Michelly Cardoso',
+        likes: '16.5K',
+        comments: '1.8K',
         bookmarks: '4.1K',
         shares: '14.2K',
         userProfile: 'https://images.unsplash.com/photo-1633332755192-727a05c4013d?w=64&h=64&fit=crop'
@@ -18,13 +18,27 @@ const videos = [
         username: 'Sarah Beaulty',
         description: '🌸 Rosa é minha cor favorita',
         hashtags: '#nature #beautiful #pink',
-        music: 'som original - nature.vibes',
-        likes: '223.4K',
-        comments: '18.2K',
+        music: 'som original - Sarah Beaulty',
+        likes: '23.4K',
+        comments: '8.2K',
         bookmarks: '5.2K',
         shares: '20.1K',
         userProfile: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=64&h=64&fit=crop'
-    }
+    },   
+     {
+      id: '3',
+      url: './img/modelo1.MP4',
+      username: 'Amanda Chaves',
+      description: 'TBT desse dia na viagem',
+      hashtags: '#TBT #Fy #Vibe',
+      music: 'som original - Amanda Chaves',
+      likes: '7.5K',
+      comments: '1.2K',
+      bookmarks: '4.1K',
+      shares: '1.2K',
+      userProfile: 'https://images.unsplash.com/photo-1633332755192-727a05c4013d?w=64&h=64&fit=crop'
+  },
+
 ];
 
 function createVideoElement(video) {
@@ -257,50 +271,76 @@ function initializeFeed() {
     });
 
 
-function handleAction(action, button, isDoubleClick = false) {
-    const count = button.querySelector('.count');
-    const videoContainer = button.closest('.video-container');
-    const videoIndex = Array.from(videoContainer.parentNode.children).indexOf(videoContainer);
-    const video = videos[videoIndex];
-
-    switch (action) {
-        case 'like':
-            if (!isDoubleClick) {
-                if (!button.classList.contains('liked')) {
-                    button.classList.add('liked');
-                    let currentLikes = parseInt(count.textContent.replace(/[^0-9]/g, ''));
-                    if (currentLikes < 1000) {
-                        count.textContent = currentLikes + 1;
-                    }
-                } else {
-                    button.classList.remove('liked');
-                    let currentLikes = parseInt(count.textContent.replace(/[^0-9]/g, ''));
-                    if (currentLikes < 1000) {
-                        count.textContent = currentLikes - 1;
-                    }
-                }
-            } else {
-                if (!button.classList.contains('liked')) {
-                    button.classList.add('liked');
-                    let currentLikes = parseInt(count.textContent.replace(/[^0-9]/g, ''));
-                    if (currentLikes < 1000) {
-                        count.textContent = currentLikes + 1;
-                    }
-                }
-            }
-            break;
-        case 'bookmark':
-            button.classList.toggle('bookmarked');
-            break;
-        case 'share':
-            handleShare(video);
-            break;
-        case 'comment':
-            handleComment(video);
-            break;
-    }
-}
-
+    function parseValue(value) {
+      // Converte valores com 'K' ou 'M' em números inteiros
+      if (value.includes('K')) {
+          return parseFloat(value.replace('K', '')) * 1000;
+      } else if (value.includes('M')) {
+          return parseFloat(value.replace('M', '')) * 1000000;
+      }
+      return parseInt(value.replace(/[^0-9]/g, ''));
+  }
+  
+  function formatValue(value) {
+      // Formata valores maiores que 1000 como 'K' e maiores que 1 milhão como 'M'
+      if (value >= 1000000) {
+          return (value / 1000000).toFixed(1) + 'M';
+      } else if (value >= 1000) {
+          return (value / 1000).toFixed(1) + 'K';
+      }
+      return value.toString();
+  }
+  
+  function handleAction(action, button, isDoubleClick = false) {
+      const count = button.querySelector('.count');
+      const videoContainer = button.closest('.video-container');
+      const videoIndex = Array.from(videoContainer.parentNode.children).indexOf(videoContainer);
+      const video = videos[videoIndex];
+  
+      switch (action) {
+          case 'like':
+              if (!isDoubleClick) {
+                  if (!button.classList.contains('liked')) {
+                      button.classList.add('liked');
+                      const currentLikes = parseValue(video.likes);
+                      if (currentLikes < 1000) {
+                          video.likes = formatValue(currentLikes + 1);
+                          count.textContent = video.likes;
+                      }
+                  } else {
+                      button.classList.remove('liked');
+                      const currentLikes = parseValue(video.likes);
+                      if (currentLikes < 1000) {
+                          video.likes = formatValue(currentLikes - 1);
+                          count.textContent = video.likes;
+                      }
+                  }
+              } else {
+                  if (!button.classList.contains('liked')) {
+                      button.classList.add('liked');
+                      const currentLikes = parseValue(video.likes);
+                      if (currentLikes < 1000) {
+                          video.likes = formatValue(currentLikes + 1);
+                          count.textContent = video.likes;
+                      }
+                  }
+              }
+              break;
+  
+          case 'bookmark':
+              button.classList.toggle('bookmarked');
+              break;
+  
+          case 'share':
+              handleShare(video);
+              break;
+  
+          case 'comment':
+              handleComment(video);
+              break;
+      }
+  }
+  
 function handleComment(video) {
     const commentModal = document.createElement('div');
     commentModal.className = 'comment-modal';
