@@ -25,19 +25,6 @@ const videos = [
         shares: '20.1K',
         userProfile: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=64&h=64&fit=crop'
     },   
-     {
-      id: '3',
-      url: './img/modelo1.MP4',
-      username: 'Amanda Chaves',
-      description: 'TBT desse dia na viagem',
-      hashtags: '#TBT #Fy #Vibe',
-      music: 'som original - Amanda Chaves',
-      likes: '7.5K',
-      comments: '1.2K',
-      bookmarks: '4.1K',
-      shares: '1.2K',
-      userProfile: 'https://images.unsplash.com/photo-1633332755192-727a05c4013d?w=64&h=64&fit=crop'
-  },
 
 ];
 
