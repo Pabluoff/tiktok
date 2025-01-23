@@ -125,15 +125,6 @@ body {
   transition: transform 0.1s ease;
 }
 
-.sub-progress-bar.interacting .progress-bar {
-  background: #ffffff;
-}
-
-.sub-progress-bar.interacting .progress-dot {
-  width: 12px;
-  height: 12px;
-}
-
 .video-info {
   position: absolute;
   bottom: 0;
@@ -619,3 +610,31 @@ body {
   }
 }
 
+.time-display {
+  position: absolute;
+  bottom: 50px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 30px;
+  font-weight: bold;
+  font-family: Arial, sans-serif;
+  opacity: 0;
+}
+
+.time-display.visible {
+  opacity: 1;
+}
+
+.time-display .current-time {
+  color: #ffffff; 
+}
+
+.time-display .total-time {
+  color: #ffffffb3;
+}
+
+.video-info.hidden,
+.video-actions.hidden {
+  opacity: 0;
+  pointer-events: none;
+}

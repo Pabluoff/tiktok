@@ -33,6 +33,7 @@ function createVideoElement(video) {
 
     container.innerHTML = `
       <video src="${video.url}" loop muted playsinline></video>
+      <div class="time-display">0:00 / 0:00</div>
      <div class="sub-progress-bar">
        <div class="progress-bar">
          <div class="progress-dot"></div>
@@ -98,9 +99,17 @@ function createVideoElement(video) {
     return container;
 }
 
+function formatTime(seconds) {
+  if (isNaN(seconds)) return "0:00";
+  
+  const minutes = Math.floor(seconds / 60);
+  const remainingSeconds = Math.floor(seconds % 60);
+  return `${minutes}:${remainingSeconds.toString().padStart(2, '0')}`;
+}
+
 function initializeFeed() {
   const feed = document.getElementById('feed');
-  let isInteracting = false; // Variável global para saber se alguma barra está sendo manipulada
+  let isInteracting = false;
 
   videos.forEach((video) => {
     const videoElement = createVideoElement(video);
@@ -110,44 +119,72 @@ function initializeFeed() {
     const subProgressBar = videoElement.querySelector('.sub-progress-bar');
     const progressBar = videoElement.querySelector('.progress-bar');
     const progressDot = videoElement.querySelector('.progress-dot');
+    const timeDisplay = videoElement.querySelector('.time-display');
+    const videoInfo = videoElement.querySelector('.video-info');
+    const videoActions = videoElement.querySelector('.video-actions');
+    
+    // Adiciona as tags para os tempos separados
+    const currentTimeSpan = document.createElement('span');
+    currentTimeSpan.classList.add('current-time');
+    const totalTimeSpan = document.createElement('span');
+    totalTimeSpan.classList.add('total-time');
+    timeDisplay.innerHTML = '';  // Limpa o conteúdo original
+    timeDisplay.appendChild(currentTimeSpan);
+    timeDisplay.appendChild(document.createTextNode(' / '));
+    timeDisplay.appendChild(totalTimeSpan);
 
-    // Atualizar a barra e o "dot" com o progresso do vídeo
+    videoTag.addEventListener('loadedmetadata', () => {
+        totalTimeSpan.textContent = formatTime(videoTag.duration);
+    });
+
     videoTag.addEventListener('timeupdate', () => {
-      const percentage = (videoTag.currentTime / videoTag.duration) * 100;
-      progressBar.style.width = `${percentage}%`;
-      progressDot.style.transform = `translate(${percentage}%, -50%)`;
+        const percentage = (videoTag.currentTime / videoTag.duration) * 100;
+        progressBar.style.width = `${percentage}%`;
+        progressDot.style.transform = `translate(${percentage}%, -50%)`;
+        
+        if (!isInteracting) {
+            currentTimeSpan.textContent = formatTime(videoTag.currentTime);
+        }
     });
 
     const startInteraction = (event) => {
-      isInteracting = true;
-      subProgressBar.classList.add('interacting');
-      updateProgress(event);
-      feed.style.overflowY = 'hidden';
-
-      // Certifique-se de que todas as barras fiquem visíveis
-      document.querySelectorAll('.sub-progress-bar').forEach((bar) => {
-        bar.style.opacity = '1';
-      });
+        isInteracting = true;
+        subProgressBar.classList.add('interacting');
+        
+        // Oculta os controles de todos os vídeos
+        document.querySelectorAll('.video-info').forEach(info => info.classList.add('hidden'));
+        document.querySelectorAll('.video-actions').forEach(actions => actions.classList.add('hidden'));
+        document.querySelectorAll('.time-display').forEach(timer => timer.classList.add('visible'));
+        
+        updateProgress(event);
+        feed.style.overflowY = 'hidden';
     };
 
     const stopInteraction = () => {
-      if (isInteracting) {
-        isInteracting = false;
-        subProgressBar.classList.remove('interacting');
-        feed.style.overflowY = 'scroll';
-      }
+        if (isInteracting) {
+            isInteracting = false;
+            subProgressBar.classList.remove('interacting');
+            
+            // Mostra os controles de todos os vídeos
+            document.querySelectorAll('.video-info').forEach(info => info.classList.remove('hidden'));
+            document.querySelectorAll('.video-actions').forEach(actions => actions.classList.remove('hidden'));
+            document.querySelectorAll('.time-display').forEach(timer => timer.classList.remove('visible'));
+            
+            feed.style.overflowY = 'scroll';
+        }
     };
 
     const updateProgress = (event) => {
-      if (!isInteracting) return;
+        if (!isInteracting) return;
 
-      const rect = subProgressBar.getBoundingClientRect();
-      const offsetX = event.touches ? event.touches[0].clientX : event.clientX;
-      const percentage = Math.max(0, Math.min(1, (offsetX - rect.left) / rect.width));
+        const rect = subProgressBar.getBoundingClientRect();
+        const offsetX = event.touches ? event.touches[0].clientX : event.clientX;
+        const percentage = Math.max(0, Math.min(1, (offsetX - rect.left) / rect.width));
 
-      videoTag.currentTime = percentage * videoTag.duration;
-      progressBar.style.width = `${percentage * 100}%`;
-      progressDot.style.transform = `translate(${percentage * 100}%, -50%)`;
+        videoTag.currentTime = percentage * videoTag.duration;
+        currentTimeSpan.textContent = formatTime(videoTag.currentTime);
+        progressBar.style.width = `${percentage * 100}%`;
+        progressDot.style.transform = `translate(${percentage * 100}%, -50%)`;
     };
 
     subProgressBar.addEventListener('mousedown', startInteraction);
@@ -194,7 +231,7 @@ function initializeFeed() {
   document.querySelectorAll('.video-container').forEach((container) => {
     observer.observe(container);
   });
-  
+    
     // Handle interactions
     document.addEventListener('click', (e) => {
         const video = e.target.closest('video');
