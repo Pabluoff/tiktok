@@ -1,7 +1,7 @@
 const videos = [
     {
         id: '1',
-        url: 'https://assets.mixkit.co/videos/preview/mixkit-girl-in-neon-sign-1232-large.mp4',
+        url: './img/modelo2.MP4',
         username: 'Michelly Cardoso',
         description: 'Será que desse ângulo fica bom? 🤭',
         hashtags: '#CandyPacks #Viral #Trendy',
@@ -14,7 +14,7 @@ const videos = [
     },
     {
         id: '2',
-        url: 'https://assets.mixkit.co/videos/preview/mixkit-girl-in-neon-sign-1232-large.mp4',
+        url: './img/modelo3.MP4',
         username: 'Sarah Beaulty',
         description: '🌸 Rosa é minha cor favorita',
         hashtags: '#nature #beautiful #pink',
@@ -231,7 +231,7 @@ function initializeFeed() {
   document.querySelectorAll('.video-container').forEach((container) => {
     observer.observe(container);
   });
-    
+
     // Handle interactions
     document.addEventListener('click', (e) => {
         const video = e.target.closest('video');
