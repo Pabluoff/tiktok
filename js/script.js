@@ -123,14 +123,16 @@ function initializeFeed() {
       isInteracting = true;
       subProgressBar.classList.add('interacting');
       updateProgress(event);
-      document.body.style.overflow = 'hidden';
+      feed.addEventListener('wheel', disableScroll, { passive: false });
+      feed.addEventListener('touchmove', disableScroll, { passive: false });
     };
 
     const stopInteraction = () => {
       if (isInteracting) {
         isInteracting = false;
         subProgressBar.classList.remove('interacting');
-        document.body.style.overflow = '';
+        feed.removeEventListener('wheel', disableScroll);
+        feed.removeEventListener('touchmove', disableScroll);
       }
     };
 

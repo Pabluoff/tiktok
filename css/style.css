@@ -67,7 +67,7 @@ body {
 }
 
 .feed {
-  height: 100vh;
+  height: 100%;
   overflow-y: scroll;
   scroll-snap-type: y mandatory;
   -ms-overflow-style: none;
