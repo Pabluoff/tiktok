@@ -80,15 +80,20 @@ body {
 
 .video-container {
   position: relative;
-  height: auto;
+  height: calc(100vh - 90px); /* Ajusta a altura para considerar os 90px do bottom */
   scroll-snap-align: start;
   background-color: black;
+  display: flex; /* Centraliza o vídeo */
+  justify-content: center;
+  align-items: center;
 }
 
 .video-container video {
   width: 100%;
-  height: calc(100vh - 90px);
-  object-fit: cover;
+  height: auto; /* Ajusta automaticamente a altura */
+  max-height: 100%; /* Garante que o vídeo não ultrapasse a altura do contêiner */
+  object-fit: cover; /* Preenche o contêiner mantendo a proporção */
+  background-color: black; /* Fundo preto para preencher áreas vazias */
 }
 
 .sub-progress-bar {
