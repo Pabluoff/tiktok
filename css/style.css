@@ -94,12 +94,12 @@ body {
 
 .sub-progress-bar {
   position: absolute;
-  bottom: 0;
+  bottom: 2px;
   left: 0;
   width: 100%;
   height: 2px;
   background: rgba(255, 255, 255, 0.132); 
-  z-index: 9999;
+  z-index: 99;
   opacity: 1; 
   transition: opacity 0.3s ease;
   cursor: pointer;
