@@ -15,6 +15,7 @@ body {
 .app-container {
   height: 100vh;
   position: relative;
+  padding-bottom: 90px;
 }
 
 .top-nav {
@@ -24,6 +25,7 @@ body {
   right: 0;
   z-index: 100;
   padding: 0.5rem;
+  background-color: transparent;
 }
 
 .nav-buttons {
@@ -45,6 +47,7 @@ body {
   align-items: center;
   gap: 0.25rem;
   transition: color 0.2s ease;
+  position: relative;
 }
 
 .nav-buttons button:hover {
@@ -53,7 +56,6 @@ body {
 
 .nav-buttons button.active {
   color: white;
-  position: relative;
 }
 
 .nav-buttons button.active::after {
@@ -67,8 +69,8 @@ body {
 }
 
 .feed {
-  height: 100%;
-  overflow-y: scroll;
+  height: calc(100vh - 90px);
+  overflow-y: auto;
   scroll-snap-type: y mandatory;
   -ms-overflow-style: none;
   scrollbar-width: none;
@@ -80,7 +82,7 @@ body {
 
 .video-container {
   position: relative;
-  height: calc(100vh - 90px);
+  height: 100%;
   scroll-snap-align: start;
   background-color: black;
 }
@@ -88,7 +90,7 @@ body {
 .video-container video {
   width: 100%;
   height: 100%;
-  object-fit: contain;
+  object-fit: cover;
 }
 
 .sub-progress-bar {
@@ -97,9 +99,9 @@ body {
   left: 0;
   width: 100%;
   height: 2px;
-  background: rgba(255, 255, 255, 0.132); 
+  background: rgba(255, 255, 255, 0.132);
   z-index: 99;
-  opacity: 1; 
+  opacity: 1;
   transition: opacity 0.3s ease;
   cursor: pointer;
 }
@@ -131,6 +133,7 @@ body {
   right: 0;
   padding: 1rem;
   background: linear-gradient(to top, rgba(0, 0, 0, 0.6) 0%, transparent 100%);
+  z-index: 1;
 }
 
 .video-info .username {
@@ -174,34 +177,6 @@ body {
   margin-bottom: 0.5rem;
 }
 
-.vip-message {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  padding: 2rem;
-  height: 100%;
-  color: white;
-}
-
-.vip-icon {
-  margin-bottom: 0.3rem;
-  color: #FE2C55;
-}
-
-.vip-message h3 {
-  font-size: 1.65rem;
-  margin-bottom: 0.5rem;
-  color: #FE2C55;
-}
-
-.vip-message p {
-  font-size: 0.9rem;
-  margin-bottom: 1.5rem;
-  color: rgba(255, 255, 255, 0.67);
-}
-
 .video-info .music {
   display: flex;
   align-items: center;
@@ -214,16 +189,6 @@ body {
   animation: rotate 4s linear infinite;
 }
 
-@keyframes rotate {
-  from {
-    transform: rotate(0deg);
-  }
-
-  to {
-    transform: rotate(360deg);
-  }
-}
-
 .video-actions {
   position: absolute;
   right: 0.75rem;
@@ -232,6 +197,7 @@ body {
   flex-direction: column;
   gap: 1.25rem;
   align-items: center;
+  z-index: 2;
 }
 
 .action-button {
@@ -301,16 +267,17 @@ body {
 }
 
 .bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 90px;
+  background-color: black;
+  z-index: 1000;
+  padding: 0 15px;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background-color: #000000;
-  width: 100%;
-  height: 90px;
-  position: fixed;
-  bottom: 0;
-  z-index: 1000;
-  padding: 0 15px;
 }
 
 .nav-item {
@@ -347,28 +314,6 @@ body {
 
 .create-button .plus-icon:hover {
   transform: scale(1.1);
-}
-
-@keyframes heartBeat {
-  0% {
-    transform: scale(1);
-  }
-
-  14% {
-    transform: scale(1.3);
-  }
-
-  28% {
-    transform: scale(1);
-  }
-
-  42% {
-    transform: scale(1.3);
-  }
-
-  70% {
-    transform: scale(1);
-  }
 }
 
 .share-menu {
@@ -503,7 +448,6 @@ body {
   pointer-events: auto;
 }
 
-/* Toast notification */
 .toast {
   position: fixed;
   top: 60px;
@@ -523,18 +467,6 @@ body {
   opacity: 1;
 }
 
-@media (min-width: 768px) {
-  .share-menu {
-    max-width: 420px;
-    left: 50%;
-    transform: translate(-50%, 100%);
-  }
-
-  .share-menu.active {
-    transform: translate(-50%, 0);
-  }
-}
-
 .heart-icon {
   position: absolute;
   font-size: 80px;
@@ -543,23 +475,6 @@ body {
   z-index: 9999;
   transform: scale(0);
   animation: heartAnimation 1.6s ease-out;
-}
-
-@keyframes heartAnimation {
-  0% {
-    transform: scale(0) translateY(0);
-    opacity: 1;
-  }
-
-  50% {
-    transform: scale(1.5) translateY(-50px);
-    opacity: 0.6;
-  }
-
-  100% {
-    transform: scale(0) translateY(-900px);
-    opacity: 0.2;
-  }
 }
 
 .comment-modal {
@@ -625,18 +540,6 @@ body {
   padding: 1rem;
 }
 
-@media (min-width: 768px) {
-  .comment-modal {
-    max-width: 420px;
-    left: 50%;
-    transform: translate(-50%, 100%);
-  }
-
-  .comment-modal.active {
-    transform: translate(-50%, 0);
-  }
-}
-
 .time-display {
   position: absolute;
   bottom: 50px;
@@ -653,7 +556,7 @@ body {
 }
 
 .time-display .current-time {
-  color: #ffffff; 
+  color: #ffffff;
 }
 
 .time-display .total-time {
@@ -664,4 +567,68 @@ body {
 .video-actions.hidden {
   opacity: 0;
   pointer-events: none;
+}
+
+@keyframes rotate {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes heartBeat {
+  0% {
+    transform: scale(1);
+  }
+  14% {
+    transform: scale(1.3);
+  }
+  28% {
+    transform: scale(1);
+  }
+  42% {
+    transform: scale(1.3);
+  }
+  70% {
+    transform: scale(1);
+  }
+}
+
+@keyframes heartAnimation {
+  0% {
+    transform: scale(0) translateY(0);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.5) translateY(-50px);
+    opacity: 0.6;
+  }
+  100% {
+    transform: scale(0) translateY(-900px);
+    opacity: 0.2;
+  }
+}
+
+@media (min-width: 768px) {
+  .share-menu {
+    max-width: 420px;
+    left: 50%;
+    transform: translate(-50%, 100%);
+  }
+
+  .share-menu.active {
+    transform: translate(-50%, 0);
+  }
+
+  .comment-modal {
+    max-width: 420px;
+    left: 50%;
+    transform: translate(-50%, 100%);
+  }
+
+  .comment-modal.active {
+    transform: translate(-50%, 0);
+  }
 }
