@@ -68,14 +68,14 @@ body {
 
 .feed {
   position: fixed;
-  top: 48px;
   bottom: 90px;
   left: 0;
   right: 0;
-  overflow-y: auto;
+  overflow-y: scroll;
   scroll-snap-type: y mandatory;
   -ms-overflow-style: none;
   scrollbar-width: none;
+  height: calc(100vh - 90px); 
 }
 
 .feed::-webkit-scrollbar {
@@ -84,7 +84,10 @@ body {
 
 .video-container {
   position: relative;
-  height: 100%;
+  height: calc(100vh - 90px);
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
+  background-color: black;
 }
 
 .video-container video {
