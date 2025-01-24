@@ -67,28 +67,32 @@ body {
 }
 
 .feed {
-  height: 100%;
+  height: 100vh; /* Altura total da janela de visualização */
   overflow-y: scroll;
   scroll-snap-type: y mandatory;
-  -ms-overflow-style: none;
-  scrollbar-width: none;
+  -ms-overflow-style: none; /* Remove a barra de rolagem no IE */
+  scrollbar-width: none; /* Remove a barra de rolagem no Firefox */
 }
 
 .feed::-webkit-scrollbar {
-  display: none;
+  display: none; /* Remove a barra de rolagem no Chrome e Safari */
 }
 
 .video-container {
   position: relative;
-  height: calc(100vh - 90px);
+  height: calc(100vh - 89px); /* Altura total da janela menos 90px na parte inferior */
   scroll-snap-align: start;
   background-color: black;
+  display: flex;
+  justify-content: center;
+  align-items: center; /* Centraliza o vídeo no contêiner */
 }
 
 .video-container video {
-  width: 100%;
-  height: 100vh;
-  object-fit: cover;
+  width: 100%; /* Largura total da tela */
+  height: 100%; /* Ocupa toda a altura do contêiner */
+  object-fit: cover; /* Mantém as proporções do vídeo */
+  background-color: black; /* Fundo preto para áreas não preenchidas */
 }
 
 .sub-progress-bar {

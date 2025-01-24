@@ -12,6 +12,7 @@ const videos = [
     shares: '14.2K',
     userProfile: 'https://images.unsplash.com/photo-1633332755192-727a05c4013d?w=64&h=64&fit=crop'
   },
+
   {
     id: '2',
     url: './img/modelo3.MP4',
@@ -24,7 +25,20 @@ const videos = [
     bookmarks: '5.2K',
     shares: '20.1K',
     userProfile: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=64&h=64&fit=crop'
-  }
+  },  {
+    id: '3',
+    url: './img/modelo2.MP4',
+    username: 'Michelly Cardoso',
+    description: 'Será que desse ângulo fica bom? 🤭',
+    hashtags: '#Fyp #Viral #Trendy',
+    music: 'som original - Michelly Cardoso',
+    likes: '16.5K',
+    comments: '1.8K',
+    bookmarks: '4.1K',
+    shares: '14.2K',
+    userProfile: 'https://images.unsplash.com/photo-1633332755192-727a05c4013d?w=64&h=64&fit=crop'
+  },
+
 ];
 
 // Load liked and bookmarked videos from localStorage
