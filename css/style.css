@@ -67,34 +67,38 @@ body {
 }
 
 .feed {
-  height: 100%;
+  height: 100vh; /* Ocupa toda a altura da janela de visualização */
   overflow-y: scroll;
   scroll-snap-type: y mandatory;
-  -ms-overflow-style: none;
-  scrollbar-width: none;
+  -ms-overflow-style: none; /* Esconde a barra de rolagem no IE */
+  scrollbar-width: none; /* Esconde a barra de rolagem no Firefox */
 }
 
 .feed::-webkit-scrollbar {
-  display: none;
+  display: none; /* Esconde a barra de rolagem no Chrome, Safari e outros baseados em WebKit */
 }
 
 .video-container {
   position: relative;
-  height: calc(100% - 90px);
-  scroll-snap-align: start;
-  background-color: black;
+  height: 100vh; /* Cada vídeo ocupa toda a altura da janela */
+  scroll-snap-align: start; /* Alinha o vídeo no início ao rolar */
+  background-color: black; /* Fundo preto para consistência */
+  display: flex; /* Centraliza o vídeo verticalmente */
+  justify-content: center; /* Centraliza horizontalmente */
+  align-items: center; /* Centraliza verticalmente */
 }
 
 .video-container video {
-  top: 0 auto;
-  width: 100%;
-  height: 100vh;
-  object-fit: cover;
+  width: 100%; /* Ocupa toda a largura da página */
+  height: auto; /* Ajusta a altura proporcionalmente */
+  max-height: 100vh; /* Garante que o vídeo não ultrapasse a altura da tela */
+  object-fit: contain; /* Mantém a proporção do vídeo */
+  background-color: black; /* Fundo preto para áreas que não forem preenchidas pelo vídeo */
 }
 
 .sub-progress-bar {
   position: absolute;
-  bottom: 2px;
+  bottom: 90px;
   left: 0;
   width: 100%;
   height: 2px;
@@ -127,7 +131,7 @@ body {
 
 .video-info {
   position: absolute;
-  bottom: 0;
+  bottom: 90px;
   left: 0;
   right: 0;
   padding: 1rem;
@@ -200,7 +204,7 @@ body {
 .video-actions {
   position: absolute;
   right: 0.75rem;
-  bottom: 1rem;
+  bottom: 98px;
   display: flex;
   flex-direction: column;
   gap: 1.25rem;
