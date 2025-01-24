@@ -45,11 +45,9 @@ try {
   console.error('Error loading saved data:', error);
 }
 
-function createVideoElement(video, index) {
+function createVideoElement(video) {
   const container = document.createElement('div');
-
-  // Adiciona a classe diferenciada ao primeiro vídeo
-  container.className = index === 0 ? 'video-container first-video' : 'video-container';
+  container.className = 'video-container';
 
   // Check if video is liked or bookmarked
   const isLiked = likedVideos[video.id] === true;
