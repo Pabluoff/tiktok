@@ -179,6 +179,34 @@ body {
   margin-bottom: 0.5rem;
 }
 
+.vip-message {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 2rem;
+  height: 100%;
+  color: white;
+}
+
+.vip-icon {
+  margin-bottom: 0.3rem;
+  color: #FE2C55;
+}
+
+.vip-message h3 {
+  font-size: 1.65rem;
+  margin-bottom: 0.5rem;
+  color: #FE2C55;
+}
+
+.vip-message p {
+  font-size: 0.9rem;
+  margin-bottom: 1.5rem;
+  color: rgba(255, 255, 255, 0.67);
+}
+
 .video-info .music {
   display: flex;
   align-items: center;
