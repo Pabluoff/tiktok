@@ -12,7 +12,6 @@ const videos = [
     shares: '14.2K',
     userProfile: 'https://images.unsplash.com/photo-1633332755192-727a05c4013d?w=64&h=64&fit=crop'
   },
-
   {
     id: '2',
     url: './img/modelo3.MP4',
@@ -25,25 +24,13 @@ const videos = [
     bookmarks: '5.2K',
     shares: '20.1K',
     userProfile: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=64&h=64&fit=crop'
-  },  {
-    id: '3',
-    url: './img/modelo2.MP4',
-    username: 'Michelly Cardoso',
-    description: 'Será que desse ângulo fica bom? 🤭',
-    hashtags: '#Fyp #Viral #Trendy',
-    music: 'som original - Michelly Cardoso',
-    likes: '16.5K',
-    comments: '1.8K',
-    bookmarks: '4.1K',
-    shares: '14.2K',
-    userProfile: 'https://images.unsplash.com/photo-1633332755192-727a05c4013d?w=64&h=64&fit=crop'
-  },
-
+  }
 ];
 
 // Load liked and bookmarked videos from localStorage
 let likedVideos = {};
 let bookmarkedVideos = {};
+let isLoading = false;
 
 try {
   const savedLikes = localStorage.getItem('likedVideos');
@@ -137,7 +124,6 @@ function createVideoElement(video) {
   return container;
 }
 
-
 function formatTime(seconds) {
   if (isNaN(seconds)) return "0:00";
 
@@ -146,97 +132,131 @@ function formatTime(seconds) {
   return `${minutes}:${remainingSeconds.toString().padStart(2, '0')}`;
 }
 
-function initializeFeed() {
-  const feed = document.getElementById('feed');
-  let isInteracting = false;
+function loadMoreVideos() {
+  if (isLoading) return;
+  isLoading = true;
 
-  videos.forEach((video) => {
+  const feed = document.getElementById('feed');
+  
+  // Clone the original videos and give them new IDs
+  const newVideos = videos.map(video => ({
+    ...video,
+    id: `${video.id}-${Date.now()}`
+  }));
+
+  // Add new videos to the feed
+  newVideos.forEach(video => {
     const videoElement = createVideoElement(video);
     feed.appendChild(videoElement);
-
-    const videoTag = videoElement.querySelector('video');
-    const subProgressBar = videoElement.querySelector('.sub-progress-bar');
-    const progressBar = videoElement.querySelector('.progress-bar');
-    const progressDot = videoElement.querySelector('.progress-dot');
-    const timeDisplay = videoElement.querySelector('.time-display');
-    const videoInfo = videoElement.querySelector('.video-info');
-    const videoActions = videoElement.querySelector('.video-actions');
-
-    // Adiciona as tags para os tempos separados
-    const currentTimeSpan = document.createElement('span');
-    currentTimeSpan.classList.add('current-time');
-    const totalTimeSpan = document.createElement('span');
-    totalTimeSpan.classList.add('total-time');
-    timeDisplay.innerHTML = '';  // Limpa o conteúdo original
-    timeDisplay.appendChild(currentTimeSpan);
-    timeDisplay.appendChild(document.createTextNode(' / '));
-    timeDisplay.appendChild(totalTimeSpan);
-
-    videoTag.addEventListener('loadedmetadata', () => {
-      totalTimeSpan.textContent = formatTime(videoTag.duration);
-    });
-
-    videoTag.addEventListener('timeupdate', () => {
-      const percentage = (videoTag.currentTime / videoTag.duration) * 100;
-      progressBar.style.width = `${percentage}%`;
-      progressDot.style.transform = `translate(${percentage}%, -50%)`;
-
-      if (!isInteracting) {
-        currentTimeSpan.textContent = formatTime(videoTag.currentTime);
-      }
-    });
-
-    const startInteraction = (event) => {
-      isInteracting = true;
-      subProgressBar.classList.add('interacting');
-
-      // Oculta os controles de todos os vídeos
-      document.querySelectorAll('.video-info').forEach(info => info.classList.add('hidden'));
-      document.querySelectorAll('.video-actions').forEach(actions => actions.classList.add('hidden'));
-      document.querySelectorAll('.time-display').forEach(timer => timer.classList.add('visible'));
-
-      updateProgress(event);
-      feed.style.overflowY = 'hidden';
-    };
-
-    const stopInteraction = () => {
-      if (isInteracting) {
-        isInteracting = false;
-        subProgressBar.classList.remove('interacting');
-
-        // Mostra os controles de todos os vídeos
-        document.querySelectorAll('.video-info').forEach(info => info.classList.remove('hidden'));
-        document.querySelectorAll('.video-actions').forEach(actions => actions.classList.remove('hidden'));
-        document.querySelectorAll('.time-display').forEach(timer => timer.classList.remove('visible'));
-
-        feed.style.overflowY = 'scroll';
-      }
-    };
-
-    const updateProgress = (event) => {
-      if (!isInteracting) return;
-
-      const rect = subProgressBar.getBoundingClientRect();
-      const offsetX = event.touches ? event.touches[0].clientX : event.clientX;
-      const percentage = Math.max(0, Math.min(1, (offsetX - rect.left) / rect.width));
-
-      videoTag.currentTime = percentage * videoTag.duration;
-      currentTimeSpan.textContent = formatTime(videoTag.currentTime);
-      progressBar.style.width = `${percentage * 100}%`;
-      progressDot.style.transform = `translate(${percentage * 100}%, -50%)`;
-    };
-
-    subProgressBar.addEventListener('mousedown', startInteraction);
-    subProgressBar.addEventListener('mousemove', updateProgress);
-    document.addEventListener('mouseup', stopInteraction);
-
-    subProgressBar.addEventListener('touchstart', startInteraction);
-    subProgressBar.addEventListener('touchmove', updateProgress);
-    document.addEventListener('touchend', stopInteraction);
+    initializeVideoControls(videoElement);
   });
 
-  // Ajustar opacidade ao rolar, mas não enquanto a barra está sendo manipulada
+  isLoading = false;
+}
+
+function initializeVideoControls(videoElement) {
+  const videoTag = videoElement.querySelector('video');
+  const subProgressBar = videoElement.querySelector('.sub-progress-bar');
+  const progressBar = videoElement.querySelector('.progress-bar');
+  const progressDot = videoElement.querySelector('.progress-dot');
+  const timeDisplay = videoElement.querySelector('.time-display');
+  const videoInfo = videoElement.querySelector('.video-info');
+  const videoActions = videoElement.querySelector('.video-actions');
+  let isInteracting = false;
+
+  // Add the tags for separated times
+  const currentTimeSpan = document.createElement('span');
+  currentTimeSpan.classList.add('current-time');
+  const totalTimeSpan = document.createElement('span');
+  totalTimeSpan.classList.add('total-time');
+  timeDisplay.innerHTML = '';  // Clear original content
+  timeDisplay.appendChild(currentTimeSpan);
+  timeDisplay.appendChild(document.createTextNode(' / '));
+  timeDisplay.appendChild(totalTimeSpan);
+
+  videoTag.addEventListener('loadedmetadata', () => {
+    totalTimeSpan.textContent = formatTime(videoTag.duration);
+  });
+
+  videoTag.addEventListener('timeupdate', () => {
+    const percentage = (videoTag.currentTime / videoTag.duration) * 100;
+    progressBar.style.width = `${percentage}%`;
+    progressDot.style.transform = `translate(${percentage}%, -50%)`;
+
+    if (!isInteracting) {
+      currentTimeSpan.textContent = formatTime(videoTag.currentTime);
+    }
+  });
+
+  const startInteraction = (event) => {
+    isInteracting = true;
+    subProgressBar.classList.add('interacting');
+
+    // Hide controls for all videos
+    document.querySelectorAll('.video-info').forEach(info => info.classList.add('hidden'));
+    document.querySelectorAll('.video-actions').forEach(actions => actions.classList.add('hidden'));
+    document.querySelectorAll('.time-display').forEach(timer => timer.classList.add('visible'));
+
+    updateProgress(event);
+    feed.style.overflowY = 'hidden';
+  };
+
+  const stopInteraction = () => {
+    if (isInteracting) {
+      isInteracting = false;
+      subProgressBar.classList.remove('interacting');
+
+      // Show controls for all videos
+      document.querySelectorAll('.video-info').forEach(info => info.classList.remove('hidden'));
+      document.querySelectorAll('.video-actions').forEach(actions => actions.classList.remove('hidden'));
+      document.querySelectorAll('.time-display').forEach(timer => timer.classList.remove('visible'));
+
+      feed.style.overflowY = 'scroll';
+    }
+  };
+
+  const updateProgress = (event) => {
+    if (!isInteracting) return;
+
+    const rect = subProgressBar.getBoundingClientRect();
+    const offsetX = event.touches ? event.touches[0].clientX : event.clientX;
+    const percentage = Math.max(0, Math.min(1, (offsetX - rect.left) / rect.width));
+
+    videoTag.currentTime = percentage * videoTag.duration;
+    currentTimeSpan.textContent = formatTime(videoTag.currentTime);
+    progressBar.style.width = `${percentage * 100}%`;
+    progressDot.style.transform = `translate(${percentage * 100}%, -50%)`;
+  };
+
+  subProgressBar.addEventListener('mousedown', startInteraction);
+  subProgressBar.addEventListener('mousemove', updateProgress);
+  document.addEventListener('mouseup', stopInteraction);
+
+  subProgressBar.addEventListener('touchstart', startInteraction);
+  subProgressBar.addEventListener('touchmove', updateProgress);
+  document.addEventListener('touchend', stopInteraction);
+}
+
+function initializeFeed() {
+  const feed = document.getElementById('feed');
+
+  // Add initial videos
+  videos.forEach(video => {
+    const videoElement = createVideoElement(video);
+    feed.appendChild(videoElement);
+    initializeVideoControls(videoElement);
+  });
+
+  // Set up infinite scroll
   feed.addEventListener('scroll', () => {
+    const { scrollTop, scrollHeight, clientHeight } = feed;
+    
+    // Load more when user scrolls to 80% of the feed
+    if (scrollTop + clientHeight >= scrollHeight * 0.8) {
+      loadMoreVideos();
+    }
+
+    // Hide progress bars during scroll
     if (!isInteracting) {
       document.querySelectorAll('.sub-progress-bar').forEach((bar) => {
         bar.style.opacity = '0';
@@ -244,7 +264,7 @@ function initializeFeed() {
 
       clearTimeout(feed.scrollTimeout);
 
-      // Restaurar opacidade após rolagem
+      // Restore opacity after scrolling
       feed.scrollTimeout = setTimeout(() => {
         document.querySelectorAll('.sub-progress-bar').forEach((bar) => {
           bar.style.opacity = '1';
@@ -253,6 +273,7 @@ function initializeFeed() {
     }
   });
 
+  // Set up Intersection Observer for video playback
   const observer = new IntersectionObserver(
     (entries) => {
       entries.forEach((entry) => {
@@ -295,197 +316,7 @@ function initializeFeed() {
     }
   });
 
-
-  function parseValue(value) {
-    // Converte valores com 'K' ou 'M' em números inteiros
-    if (value.includes('K')) {
-      return parseFloat(value.replace('K', '')) * 1000;
-    } else if (value.includes('M')) {
-      return parseFloat(value.replace('M', '')) * 1000000;
-    }
-    return parseInt(value.replace(/[^0-9]/g, ''));
-  }
-
-  function formatValue(value) {
-    // Formata valores maiores que 1000 como 'K' e maiores que 1 milhão como 'M'
-    if (value >= 1000000) {
-      return (value / 1000000).toFixed(1) + 'M';
-    } else if (value >= 1000) {
-      return (value / 1000).toFixed(1) + 'K';
-    }
-    return value.toString();
-  }
-
-  function handleAction(action, button, isDoubleClick = false) {
-    const count = button.querySelector('.count');
-    const videoContainer = button.closest('.video-container');
-    const videoIndex = Array.from(videoContainer.parentNode.children).indexOf(videoContainer);
-    const video = videos[videoIndex];
-
-    switch (action) {
-      case 'like':
-        if (!isDoubleClick) {
-          const wasLiked = likedVideos[video.id] === true;
-          likedVideos[video.id] = !wasLiked;
-
-          // Save to localStorage
-          localStorage.setItem('likedVideos', JSON.stringify(likedVideos));
-
-          if (!wasLiked) {
-            button.classList.add('liked');
-            const currentLikes = parseValue(video.likes);
-            if (currentLikes < 1000) {
-              video.likes = formatValue(currentLikes + 1);
-              count.textContent = video.likes;
-            }
-          } else {
-            button.classList.remove('liked');
-            const currentLikes = parseValue(video.likes);
-            if (currentLikes < 1000) {
-              video.likes = formatValue(currentLikes - 1);
-              count.textContent = video.likes;
-            }
-          }
-        } else {
-          if (!likedVideos[video.id]) {
-            likedVideos[video.id] = true;
-            // Save to localStorage
-            localStorage.setItem('likedVideos', JSON.stringify(likedVideos));
-
-            button.classList.add('liked');
-            const currentLikes = parseValue(video.likes);
-            if (currentLikes < 1000) {
-              video.likes = formatValue(currentLikes + 1);
-              count.textContent = video.likes;
-            }
-          }
-        }
-        break;
-
-      case 'bookmark':
-        const wasBookmarked = bookmarkedVideos[video.id] === true;
-        bookmarkedVideos[video.id] = !wasBookmarked;
-
-        // Save to localStorage
-        localStorage.setItem('bookmarkedVideos', JSON.stringify(bookmarkedVideos));
-
-        if (!wasBookmarked) {
-          button.classList.add('bookmarked');
-          const currentBookmarks = parseValue(video.bookmarks);
-          if (currentBookmarks < 1000) {
-            video.bookmarks = formatValue(currentBookmarks + 1);
-            count.textContent = video.bookmarks;
-          }
-        } else {
-          button.classList.remove('bookmarked');
-          const currentBookmarks = parseValue(video.bookmarks);
-          if (currentBookmarks < 1000) {
-            video.bookmarks = formatValue(currentBookmarks - 1);
-            count.textContent = video.bookmarks;
-          }
-        }
-        break;
-
-      case 'share':
-        handleShare(video);
-        break;
-
-      case 'comment':
-        handleComment(video);
-        break;
-    }
-  }
-
-  function handleComment(video) {
-    const commentModal = document.createElement('div');
-    commentModal.className = 'comment-modal';
-
-    const commentOverlay = document.createElement('div');
-    commentOverlay.className = 'comment-overlay';
-
-    commentModal.innerHTML = `
-        <div class="comment-header">
-            <span class="comment-count">${video.comments} comentários</span>
-            <button class="comment-close">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <line x1="18" y1="6" x2="6" y2="18"></line>
-                    <line x1="6" y1="6" x2="18" y2="18"></line>
-                </svg>
-            </button>
-        </div>
-        <div class="comments-container">
-            <div class="vip-message">
-                <div class="vip-icon">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M2 20h20"/>
-                        <path d="m5.5 12.5 4-4c1-1 2.7-1 3.7 0l4.3 4"/>
-                        <path d="m18 12.7-1.2-1.2c-1-1-2.7-1-3.7 0L10 14.6"/>
-                    </svg>
-                </div>
-                <h3>Exclusivo para VIPs </h3>
-                <p>Você deve ser VIP para fazer comentários</p>
-            </div>
-        </div>
-    `;
-
-    document.body.appendChild(commentOverlay);
-    document.body.appendChild(commentModal);
-
-    requestAnimationFrame(() => {
-      commentOverlay.classList.add('active');
-      commentModal.classList.add('active');
-    });
-
-    const closeButton = commentModal.querySelector('.comment-close');
-    const closeModal = () => {
-      commentOverlay.classList.remove('active');
-      commentModal.classList.remove('active');
-      setTimeout(() => {
-        commentOverlay.remove();
-        commentModal.remove();
-      }, 300);
-    };
-
-    closeButton.addEventListener('click', closeModal);
-    commentOverlay.addEventListener('click', (e) => {
-      if (e.target === commentOverlay) {
-        closeModal();
-      }
-    });
-  }
-
-  const style = document.createElement('style');
-  style.textContent = `
-    .vip-message {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        text-align: center;
-        padding: 2rem;
-        height: 100%;
-        color: white;
-    }
-
-    .vip-icon {
-        margin-bottom: 0.3rem;
-        color: #FE2C55;
-    }
-
-    .vip-message h3 {
-        font-size: 1.65rem;
-        margin-bottom: 0.5rem;
-        color: #FE2C55;
-    }
-
-    .vip-message p {
-        font-size: 0.9rem;
-        margin-bottom: 1.5rem;
-        color: rgba(255, 255, 255, 0.67);
-    }
-
-`;
-  document.head.appendChild(style);
+  // Double tap like functionality
   let lastTap = 0;
   document.addEventListener('touchstart', (e) => {
     const video = e.target.closest('video');
@@ -528,11 +359,92 @@ function initializeFeed() {
   });
 }
 
+function parseValue(value) {
+  if (value.includes('K')) {
+    return parseFloat(value.replace('K', '')) * 1000;
+  } else if (value.includes('M')) {
+    return parseFloat(value.replace('M', '')) * 1000000;
+  }
+  return parseInt(value.replace(/[^0-9]/g, ''));
+}
+
+function formatValue(value) {
+  if (value >= 1000000) {
+    return (value / 1000000).toFixed(1) + 'M';
+  } else if (value >= 1000) {
+    return (value / 1000).toFixed(1) + 'K';
+  }
+  return value.toString();
+}
+
+function handleAction(action, button, isDoubleClick = false) {
+  const count = button.querySelector('.count');
+  const videoContainer = button.closest('.video-container');
+  const videoIndex = Array.from(videoContainer.parentNode.children).indexOf(videoContainer);
+  const videoId = videoContainer.querySelector('video').src;
+
+  switch (action) {
+    case 'like':
+      if (!isDoubleClick) {
+        const wasLiked = likedVideos[videoId] === true;
+        likedVideos[videoId] = !wasLiked;
+
+        localStorage.setItem('likedVideos', JSON.stringify(likedVideos));
+
+        if (!wasLiked) {
+          button.classList.add('liked');
+          const currentLikes = parseValue(count.textContent);
+          count.textContent = formatValue(currentLikes + 1);
+        } else {
+          button.classList.remove('liked');
+          const currentLikes = parseValue(count.textContent);
+          count.textContent = formatValue(currentLikes - 1);
+        }
+      } else {
+        if (!likedVideos[videoId]) {
+          likedVideos[videoId] = true;
+          localStorage.setItem('likedVideos', JSON.stringify(likedVideos));
+
+          button.classList.add('liked');
+          const currentLikes = parseValue(count.textContent);
+          count.textContent = formatValue(currentLikes + 1);
+        }
+      }
+      break;
+
+    case 'bookmark':
+      const wasBookmarked = bookmarkedVideos[videoId] === true;
+      bookmarkedVideos[videoId] = !wasBookmarked;
+
+      localStorage.setItem('bookmarkedVideos', JSON.stringify(bookmarkedVideos));
+
+      if (!wasBookmarked) {
+        button.classList.add('bookmarked');
+        const currentBookmarks = parseValue(count.textContent);
+        count.textContent = formatValue(currentBookmarks + 1);
+      } else {
+        button.classList.remove('bookmarked');
+        const currentBookmarks = parseValue(count.textContent);
+        count.textContent = formatValue(currentBookmarks - 1);
+      }
+      break;
+
+    case 'share':
+      handleShare(videoContainer.dataset);
+      break;
+
+    case 'comment':
+      handleComment(videoContainer.dataset);
+      break;
+  }
+}
+
 function handleFollow(button) {
   button.textContent = button.textContent === 'Seguir' ? 'Seguindo' : 'Seguir';
   button.classList.toggle('following');
 }
-function handleShare(video) {
+
+function handleShare(videoData) {
   const shareMenu = document.createElement('div');
   shareMenu.className = 'share-menu';
 
@@ -588,7 +500,7 @@ function handleShare(video) {
     </div>
     <div class="share-link">
       <input type="text" value="${videoUrl}" readonly>
-      <button class="copy-button">Copiar</button>
+       <button class="copy-button">Copiar</button>
     </div>
   `;
 
@@ -603,7 +515,7 @@ function handleShare(video) {
   shareMenu.querySelectorAll('.share-option').forEach(option => {
     option.addEventListener('click', () => {
       const platform = option.dataset.platform;
-      shareToSocialMedia(platform, videoUrl, video);
+      shareToSocialMedia(platform, videoUrl, videoData);
     });
   });
 
@@ -630,8 +542,8 @@ function handleShare(video) {
   shareOverlay.addEventListener('click', closeMenu);
 }
 
-function shareToSocialMedia(platform, url, video) {
-  const text = encodeURIComponent(`Confira este vídeo incrível! ${video.description}`);
+function shareToSocialMedia(platform, url, videoData) {
+  const text = encodeURIComponent(`Confira este vídeo incrível!`);
   const shareUrls = {
     whatsapp: `https://api.whatsapp.com/send?text=${text}%20${url}`,
     telegram: `https://t.me/share/url?url=${url}&text=${text}`,
@@ -657,4 +569,63 @@ function showToast(message) {
     setTimeout(() => toast.remove(), 300);
   }, 2000);
 }
+
+function handleComment(videoData) {
+  const commentModal = document.createElement('div');
+  commentModal.className = 'comment-modal';
+
+  const commentOverlay = document.createElement('div');
+  commentOverlay.className = 'comment-overlay';
+
+  commentModal.innerHTML = `
+    <div class="comment-header">
+      <span class="comment-count">Comentários</span>
+      <button class="comment-close">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </button>
+    </div>
+    <div class="comments-container">
+      <div class="vip-message">
+        <div class="vip-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M2 20h20"/>
+            <path d="m5.5 12.5 4-4c1-1 2.7-1 3.7 0l4.3 4"/>
+            <path d="m18 12.7-1.2-1.2c-1-1-2.7-1-3.7 0L10 14.6"/>
+          </svg>
+        </div>
+        <h3>Exclusivo para VIPs</h3>
+        <p>Você deve ser VIP para fazer comentários</p>
+      </div>
+    </div>
+  `;
+
+  document.body.appendChild(commentOverlay);
+  document.body.appendChild(commentModal);
+
+  requestAnimationFrame(() => {
+    commentOverlay.classList.add('active');
+    commentModal.classList.add('active');
+  });
+
+  const closeButton = commentModal.querySelector('.comment-close');
+  const closeModal = () => {
+    commentOverlay.classList.remove('active');
+    commentModal.classList.remove('active');
+    setTimeout(() => {
+      commentOverlay.remove();
+      commentModal.remove();
+    }, 300);
+  };
+
+  closeButton.addEventListener('click', closeModal);
+  commentOverlay.addEventListener('click', (e) => {
+    if (e.target === commentOverlay) {
+      closeModal();
+    }
+  });
+}
+
 document.addEventListener('DOMContentLoaded', initializeFeed);
