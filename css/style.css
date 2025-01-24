@@ -80,7 +80,7 @@ body {
 
 .video-container {
   position: relative;
-  height: 100vh; /* Cada vídeo ocupa toda a altura da janela */
+  height: 100%; /* Cada vídeo ocupa toda a altura da janela */
   scroll-snap-align: start; /* Alinha o vídeo no início ao rolar */
   background-color: black; /* Fundo preto para consistência */
   display: flex; /* Centraliza o vídeo verticalmente */
