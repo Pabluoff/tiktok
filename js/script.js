@@ -152,7 +152,7 @@ function createSubscriptionAd() {
     <div class="subscription-content">
       <div class="profile-wrapper">
         <div class="profile-image">
-          <img src="/img/logo.PNG" alt="Profile">
+          <img src="./img/logo.PNG" alt="Profile">
           <div class="VIP-badge">VIP</div>
         </div>
       </div>
