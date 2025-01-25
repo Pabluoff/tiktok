@@ -338,10 +338,9 @@ body {
   border: none;
   color: #ffffffb3;
   cursor: pointer;
-  padding: 0.5rem;
+  padding: 0.7rem;
   transition: color 0.2s ease;
   margin-bottom: 30px;
-  padding: 0 9px;
 }
 
 .nav-item.active-home svg {
@@ -358,6 +357,31 @@ body {
 
 .nav-item span {
   font-size: 0.7rem;
+}
+
+.create-button .plus-icon {
+  width: 3rem;
+  height: 2.3rem;
+  background: linear-gradient(45deg, #FE2C55, #e91c43, #ff00c8);
+  border-radius: 0.6rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  z-index: 1;
+}
+
+.create-button .plus-icon::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(45deg, #000000, #1d1d1d, #000000);
+  border-radius: 0.5rem;
+  margin: 2px; 
+  z-index: -1;
 }
 
 @keyframes heartBeat {
@@ -677,30 +701,6 @@ body {
   pointer-events: none;
 }
 
-.create-button .plus-icon {
-  width: 3rem;
-  height: 2.3rem;
-  background: linear-gradient(45deg, #FE2C55, #e91c43, #ff00c8);
-  border-radius: 0.6rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  position: relative;
-  z-index: 1;
-}
-
-.create-button .plus-icon::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: linear-gradient(45deg, #000000, #1d1d1d, #000000);
-  border-radius: 0.5rem;
-  margin: 2px; /* Cria espaço para o gradiente da borda */
-  z-index: -1; /* Coloca atrás do conteúdo */
-}
 
 .promo-overlay {
   position: fixed;
