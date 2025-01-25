@@ -1,3 +1,23 @@
+// First, add the new functions for handling shared videos
+function getVideoIdFromUrl() {
+  const urlParams = new URLSearchParams(window.location.search);
+  return urlParams.get('videoId');
+}
+
+function reorderVideos(videos, sharedVideoId) {
+  if (!sharedVideoId) return videos;
+  
+  const videosCopy = [...videos];
+  const sharedVideoIndex = videosCopy.findIndex(v => v.id === sharedVideoId);
+  
+  if (sharedVideoIndex !== -1) {
+    const [sharedVideo] = videosCopy.splice(sharedVideoIndex, 1);
+    videosCopy.unshift(sharedVideo);
+  }
+  
+  return videosCopy;
+}
+
 const videos = [
   {
     id: '1',
@@ -166,11 +186,14 @@ function createSubscriptionAd() {
 }
 
 function initializeFeed() {
+  const sharedVideoId = getVideoIdFromUrl();
+  const reorderedVideos = reorderVideos(videos, sharedVideoId);
   const feed = document.getElementById('feed');
   let isInteracting = false;
 
-  // Adiciona os vídeos normais
-  videos.forEach((video) => {
+  feed.innerHTML = '';
+
+  reorderedVideos.forEach((video) => {
     const videoElement = createVideoElement(video);
     feed.appendChild(videoElement);
 
@@ -275,6 +298,13 @@ function initializeFeed() {
       }, 300);
     }
   });
+
+  if (sharedVideoId) {
+    const firstVideo = feed.querySelector('.video-container');
+    if (firstVideo) {
+      firstVideo.scrollIntoView({ behavior: 'auto' });
+    }
+  }
 
   const observer = new IntersectionObserver(
     (entries) => {
@@ -481,7 +511,7 @@ function handleShare(video) {
   const shareOverlay = document.createElement('div');
   shareOverlay.className = 'share-overlay';
 
-  const videoUrl = window.location.href;
+  const videoUrl = `${window.location.origin}${window.location.pathname}?videoId=${video.id}`;
 
   shareMenu.innerHTML = `
     <div class="share-menu-header">
