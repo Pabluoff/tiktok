@@ -703,7 +703,6 @@ body {
   align-items: center;
   justify-content: center;
   background: rgba(0, 0, 0, 0.85);
-  height: calc(100vh - 90px); 
 }
 
 .subscription-content {
