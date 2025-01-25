@@ -7,17 +7,7 @@
     "theme_color": "rgba(0, 0, 0, 0)",
     "icons": [
       {
-        "src": "/img/logo-192size.jpg",
-        "type": "image/jpg",
-        "sizes": "192x192"
-      },
-      {
-        "src": "/img/logo-1024size.jpg",
-        "type": "image/jpg",
-        "sizes": "1024x1024"
-      },
-      {
-        "src": "/img/logo-512size.png",
+        "src": "/img/logo.PNG",
         "type": "image/png",
         "sizes": "512x512"
       }
