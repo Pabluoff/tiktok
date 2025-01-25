@@ -344,10 +344,8 @@ body {
 }
 
 .nav-item.active-home svg {
-  color: #000000;
+  color: #252525;
   fill: white;
-  width: 29px;
-  height: 29px;
 
 }
 
@@ -701,87 +699,81 @@ body {
   pointer-events: none;
 }
 
-
-.promo-overlay {
-  position: fixed;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.9);
+.subscription-ad {
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 200;
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.3s ease-out;
+  background: rgba(0, 0, 0, 0.85);
 }
 
-.promo-overlay.active {
-  opacity: 1;
-  pointer-events: auto;
-}
-
-.promo-content {
+.subscription-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   text-align: center;
-  padding: 1.5rem;
-  transform: scale(0.95);
-  opacity: 0;
-  transition: all 0.3s ease-out;
+  padding: 2rem;
 }
 
-.promo-overlay.active .promo-content {
-  transform: scale(1);
-  opacity: 1;
-}
-
-.profile-image-container {
+.profile-wrapper {
   position: relative;
-  display: inline-block;
-  margin-bottom: 1.5rem;
-}
-
-.profile-image {
-  width: 6rem;
-  height: 6rem;
-  border-radius: 50%;
-  border: 2px solid #FE2C55;
-}
-
-.live-badge {
-  position: absolute;
-  top: -0.25rem;
-  right: -0.25rem;
-  background: #FE2C55;
-  color: white;
-  font-size: 0.75rem;
-  padding: 0.125rem 0.5rem;
-  border-radius: 9999px;
-}
-
-.promo-content h2 {
-  font-size: 1.5rem;
-  font-weight: 600;
   margin-bottom: 1rem;
 }
 
-.promo-content p {
-  font-size: 1.125rem;
-  opacity: 0.9;
-  margin-bottom: 2rem;
-  line-height: 1.5;
+.profile-image {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 3px solid #FE2C55;
+  position: relative;
 }
 
-.subscribe-button {
+.profile-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.VIP-badge {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #FE2C55;
+  color: white;
+  padding: 2px 10px;
+  border-radius: 4px;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.profile-name {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  color: white;
+}
+
+.subscription-text {
+  font-size: 1.1rem;
+  color: rgba(255, 255, 255, 0.9);
+  margin-bottom: 1.5rem;
+  line-height: 1.4;
+}
+
+.subscription-button {
   background: #FE2C55;
   color: white;
   border: none;
-  padding: 0.75rem 3rem;
-  border-radius: 9999px;
-  font-size: 1.125rem;
+  text-decoration: none;
+  padding: 12px 40px;
+  border-radius: 4px;
+  font-size: 1.1rem;
   font-weight: 600;
   cursor: pointer;
   transition: background-color 0.2s ease;
 }
 
-.subscribe-button:hover {
+.subscription-button:hover {
   background: #e91c43;
 }
