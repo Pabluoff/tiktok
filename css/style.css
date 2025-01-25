@@ -704,6 +704,7 @@ body {
   align-items: center;
   justify-content: center;
   background: rgba(0, 0, 0, 0.85);
+  height: calc(100vh - 90px); 
 }
 
 .subscription-content {
@@ -711,11 +712,6 @@ body {
   flex-direction: column;
   align-items: center;
   text-align: center;
-  padding: 2rem;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  top: 0;
 }
 
 .profile-wrapper {
