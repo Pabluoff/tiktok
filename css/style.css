@@ -88,11 +88,6 @@ body {
   scroll-snap-align: start;
   scroll-snap-stop: always;
   background-color: black;
-  display: flex; /* Para centralizar o vídeo */
-  justify-content: center; /* Centraliza horizontalmente */
-  align-items: center; /* Centraliza verticalmente */
-  overflow: hidden; /* Garante que partes excedentes sejam cortadas */
-
 }
 
 .video-container video {
