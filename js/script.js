@@ -1,4 +1,3 @@
-// First, add the new functions for handling shared videos
 function getVideoIdFromUrl() {
   const urlParams = new URLSearchParams(window.location.search);
   return urlParams.get('videoId');
@@ -6,15 +5,15 @@ function getVideoIdFromUrl() {
 
 function reorderVideos(videos, sharedVideoId) {
   if (!sharedVideoId) return videos;
-  
+
   const videosCopy = [...videos];
   const sharedVideoIndex = videosCopy.findIndex(v => v.id === sharedVideoId);
-  
+
   if (sharedVideoIndex !== -1) {
     const [sharedVideo] = videosCopy.splice(sharedVideoIndex, 1);
     videosCopy.unshift(sharedVideo);
   }
-  
+
   return videosCopy;
 }
 
@@ -60,7 +59,6 @@ const videos = [
   }
 ];
 
-// Load liked and bookmarked videos from localStorage
 let likedVideos = {};
 let bookmarkedVideos = {};
 
@@ -86,17 +84,30 @@ function formatTime(seconds) {
   return `${minutes}:${remainingSeconds.toString().padStart(2, '0')}`;
 }
 
-function createVideoElement(video) {
+function createVideoElement(video, isShared = false) {
   const container = document.createElement('div');
   container.className = 'video-container';
 
-  // Check if video is liked or bookmarked
   const isLiked = likedVideos[video.id] === true;
   const isBookmarked = bookmarkedVideos[video.id] === true;
   const likedClass = isLiked ? 'liked' : '';
   const bookmarkedClass = isBookmarked ? 'bookmarked' : '';
 
+  const sharedBadgeHTML = isShared ? `
+   <div class="shared-badge-container">
+     <div class="shared-badge">
+       <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/>
+          <polyline points="16 6 12 2 8 6"/>
+          <line x1="12" x2="12" y1="2" y2="15"/>
+        </svg>
+       <span>Vídeo compartilhado com você</span>
+     </div>
+   </div>
+  ` : '';
+
   container.innerHTML = `
+    ${sharedBadgeHTML}
     <video src="${video.url}" loop muted playsinline></video>
     <div class="time-display">0:00 / 0:00</div>
     <div class="sub-progress-bar">
@@ -193,8 +204,9 @@ function initializeFeed() {
 
   feed.innerHTML = '';
 
-  reorderedVideos.forEach((video) => {
-    const videoElement = createVideoElement(video);
+  reorderedVideos.forEach((video, index) => {
+    const isShared = sharedVideoId === video.id;
+    const videoElement = createVideoElement(video, isShared);
     feed.appendChild(videoElement);
 
     const videoTag = videoElement.querySelector('video');
@@ -204,58 +216,57 @@ function initializeFeed() {
     const timeDisplay = videoElement.querySelector('.time-display');
     const videoInfo = videoElement.querySelector('.video-info');
     const videoActions = videoElement.querySelector('.video-actions');
-
-    // Adiciona as tags para os tempos separados
+    
     const currentTimeSpan = document.createElement('span');
     currentTimeSpan.classList.add('current-time');
     const totalTimeSpan = document.createElement('span');
     totalTimeSpan.classList.add('total-time');
-    timeDisplay.innerHTML = '';  // Limpa o conteúdo original
+    timeDisplay.innerHTML = '';
     timeDisplay.appendChild(currentTimeSpan);
     timeDisplay.appendChild(document.createTextNode(' / '));
     timeDisplay.appendChild(totalTimeSpan);
-
+    
     videoTag.addEventListener('loadedmetadata', () => {
       totalTimeSpan.textContent = formatTime(videoTag.duration);
     });
-
+    
     videoTag.addEventListener('timeupdate', () => {
       const percentage = (videoTag.currentTime / videoTag.duration) * 100;
       progressBar.style.width = `${percentage}%`;
       progressDot.style.transform = `translate(${percentage}%, -50%)`;
-
+    
       if (!isInteracting) {
         currentTimeSpan.textContent = formatTime(videoTag.currentTime);
       }
     });
-
+    
     const startInteraction = (event) => {
       isInteracting = true;
       subProgressBar.classList.add('interacting');
-
-      // Oculta os controles de todos os vídeos
+    
       document.querySelectorAll('.video-info').forEach(info => info.classList.add('hidden'));
       document.querySelectorAll('.video-actions').forEach(actions => actions.classList.add('hidden'));
       document.querySelectorAll('.time-display').forEach(timer => timer.classList.add('visible'));
-
+      document.querySelectorAll('.shared-badge-container').forEach(badge => badge.classList.add('hidden'));
+    
       updateProgress(event);
       feed.style.overflowY = 'hidden';
     };
-
+    
     const stopInteraction = () => {
       if (isInteracting) {
         isInteracting = false;
         subProgressBar.classList.remove('interacting');
-
-        // Mostra os controles de todos os vídeos
+    
         document.querySelectorAll('.video-info').forEach(info => info.classList.remove('hidden'));
         document.querySelectorAll('.video-actions').forEach(actions => actions.classList.remove('hidden'));
         document.querySelectorAll('.time-display').forEach(timer => timer.classList.remove('visible'));
+        document.querySelectorAll('.shared-badge-container').forEach(badge => badge.classList.remove('hidden')); 
 
         feed.style.overflowY = 'scroll';
       }
     };
-
+    
     const updateProgress = (event) => {
       if (!isInteracting) return;
 

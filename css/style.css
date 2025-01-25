@@ -783,3 +783,40 @@ body {
 .subscription-button:hover {
   background: #e91c43;
 }
+
+.shared-badge-container {
+  position: absolute;
+  bottom: 121px;
+  left: 12px;
+  padding: 0.5rem 0;
+  text-align: center;
+  z-index: 99999999999999;
+}
+
+.shared-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.875rem;
+  font-weight: 500; 
+  color: #dbdbdb;
+  background-color: rgba(59, 59, 59, 0.6);
+  padding: 0.3rem 0.8rem;
+  border-radius: 6px;
+  text-transform: none;
+  user-select: none;
+}
+
+.shared-badge svg {
+  width: 18px; 
+  height: 18px;
+  stroke: #dbdbdb;
+}
+
+.shared-badge span {
+  line-height: 1;
+}
+
+.hidden {
+  display: none !important;
+}
