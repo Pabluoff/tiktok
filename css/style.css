@@ -88,21 +88,21 @@ body {
   scroll-snap-align: start;
   scroll-snap-stop: always;
   background-color: black;
-  overflow: hidden; /* Corta as partes excedentes */
+  overflow: hidden;
 }
 
 .video-container video {
-  position: absolute; /* Permite controlar a posição manualmente */
-  top: 50%; /* Centraliza verticalmente */
-  left: 50%; /* Centraliza horizontalmente */
-  transform: translate(-50%, -50%); /* Alinha o centro do vídeo com o centro do contêiner */
-  width: 100%; /* Força o preenchimento horizontal */
-  height: auto; /* Mantém a proporção */
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 100%;
+  height: auto;
 }
 
 @media (min-aspect-ratio: 16/9) {
   .video-container video {
-    height: 100%; /* Para vídeos com aspecto maior que o contêiner */
+    height: 100%;
     width: auto;
   }
 }
@@ -112,7 +112,7 @@ body {
   bottom: 2px;
   left: 0;
   width: 100%;
-  height: 2px;
+  height: 3px;
   background: rgba(255, 255, 255, 0.132);
   z-index: 99;
   opacity: 1;
@@ -535,7 +535,7 @@ body {
   pointer-events: auto;
 }
 
-/* Toast notification */
+
 .toast {
   position: fixed;
   top: 60px;
