@@ -1,21 +1,24 @@
+// Função para extrair o ID do vídeo da URL
 function getVideoIdFromUrl() {
   const urlParams = new URLSearchParams(window.location.search);
-  return urlParams.get('videoId');
+  return urlParams.get('v');
 }
 
+// Reordena os vídeos colocando o vídeo compartilhado primeiro
 function reorderVideos(videos, sharedVideoId) {
   if (!sharedVideoId) return videos;
-
+  
   const videosCopy = [...videos];
   const sharedVideoIndex = videosCopy.findIndex(v => v.id === sharedVideoId);
-
+  
   if (sharedVideoIndex !== -1) {
     const [sharedVideo] = videosCopy.splice(sharedVideoIndex, 1);
     videosCopy.unshift(sharedVideo);
   }
-
+  
   return videosCopy;
 }
+
 
 const videos = [
   {
@@ -202,9 +205,11 @@ function initializeFeed() {
   const feed = document.getElementById('feed');
   let isInteracting = false;
 
+  // Limpa o feed primeiro
   feed.innerHTML = '';
 
-  reorderedVideos.forEach((video, index) => {
+  // Use reorderedVideos ao invés da lista original
+  reorderedVideos.forEach((video) => {
     const isShared = sharedVideoId === video.id;
     const videoElement = createVideoElement(video, isShared);
     feed.appendChild(videoElement);
@@ -335,7 +340,6 @@ function initializeFeed() {
     observer.observe(container);
   });
 
-  // Handle interactions
   document.addEventListener('click', (e) => {
     const video = e.target.closest('video');
     const actionButton = e.target.closest('.action-button');
@@ -522,7 +526,13 @@ function handleShare(video) {
   const shareOverlay = document.createElement('div');
   shareOverlay.className = 'share-overlay';
 
-  const videoUrl = `${window.location.origin}${window.location.pathname}?videoId=${video.id}`;
+  // Gera um parâmetro aleatório para a URL
+  function generateRandomUrl(videoId) {
+    const randomString = Math.random().toString(36).substring(2, 8); // Gera um código aleatório
+    return `${window.location.origin}${window.location.pathname}?${randomString}&v=${videoId}`;
+  }
+
+  const videoUrl = generateRandomUrl(video.id);
 
   shareMenu.innerHTML = `
     <div class="share-menu-header">
