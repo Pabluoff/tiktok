@@ -627,8 +627,22 @@ function handleShare(video) {
 }
 
 function shareToSocialMedia(platform, url, video) {
-  const text = encodeURIComponent(`Confira este vídeo incrível! ${video.description}`);
-  const shareUrls = {
+  function getRandomShareText(videoUsername) {
+    const texts = [
+      `👀 Olha o vídeo de ${videoUsername}`,
+      `Olha ${videoUsername} nesse vídeo 😳`,
+      `Nossa.... ${videoUsername}, tem um talento incrível🔥 `,
+      `O que ${videoUsername} fez nesse vídeo? Você não vai acreditar...`,
+      `Sabe aquele vídeo que te deixa com vontade de ver mais? É esse de ${videoUsername}!`,
+      `Se você acha que já viu tudo, espere até ver esse vídeo de ${videoUsername}!`
+    ];
+  
+    const randomIndex = Math.floor(Math.random() * texts.length);
+    return encodeURIComponent(texts[randomIndex]);
+  }
+  
+    const text = getRandomShareText(video.username);
+    const shareUrls = {
     whatsapp: `https://api.whatsapp.com/send?text=${text}%20${url}`,
     telegram: `https://t.me/share/url?url=${url}&text=${text}`,
     twitter: `https://twitter.com/intent/tweet?text=${text}&url=${url}`,
