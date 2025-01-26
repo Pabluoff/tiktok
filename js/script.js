@@ -71,6 +71,11 @@ const videos = [
   }
 ];
 
+const videoIdFromUrl = getVideoIdFromUrl();
+if (videoIdFromUrl) {
+  highlightVideoById(videoIdFromUrl, videos);
+}
+
 let likedVideos = {};
 let bookmarkedVideos = {};
 
@@ -524,8 +529,21 @@ function handleFollow(button) {
   button.classList.toggle('following');
 }
 
-function generateRandomUrl(videoId) {
+function getVideoIdFromUrl() {
+  const urlParams = new URLSearchParams(window.location.search);
+  return urlParams.get('v');
+}
+
+function generateShareUrl(videoId) {
   return `${window.location.origin}${window.location.pathname}?v=${videoId}`;
+}
+
+function highlightVideoById(videoId, videos) {
+  const videoIndex = videos.findIndex(video => video.id === videoId);
+  if (videoIndex !== -1) {
+    const [highlightedVideo] = videos.splice(videoIndex, 1); 
+    videos.unshift(highlightedVideo); 
+  }
 }
 
 function handleShare(video) {
@@ -535,7 +553,9 @@ function handleShare(video) {
   const shareOverlay = document.createElement('div');
   shareOverlay.className = 'share-overlay';
 
-  const videoUrl = generateRandomUrl(video.id);
+  const urlVideoId = getVideoIdFromUrl();
+  const videoIdToShare = (urlVideoId && video.id === videos[0].id) ? urlVideoId : video.id;
+  const videoUrl = generateShareUrl(videoIdToShare);
 
   shareMenu.innerHTML = `
     <div class="share-menu-header">
