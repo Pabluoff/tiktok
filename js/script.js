@@ -1,3 +1,14 @@
+if (!sessionStorage.getItem('pageLoaded')) {
+  sessionStorage.setItem('pageLoaded', 'true');
+} else {
+  const urlParams = new URLSearchParams(window.location.search);
+  urlParams.delete('v');
+  
+  window.history.replaceState(null, '', window.location.pathname + '?' + urlParams.toString());
+
+  sessionStorage.removeItem('pageLoaded');
+}
+
 function getVideoIdFromUrl() {
   const urlParams = new URLSearchParams(window.location.search);
   return urlParams.get('v');
@@ -201,6 +212,8 @@ function initializeFeed() {
   const sharedVideoId = getVideoIdFromUrl();
   const reorderedVideos = reorderVideos(videos, sharedVideoId);
   const feed = document.getElementById('feed');
+  let isInteracting = false;
+
   feed.innerHTML = '';
 
   reorderedVideos.forEach((video) => {
