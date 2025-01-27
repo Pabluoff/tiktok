@@ -531,134 +531,25 @@ function handleFollow(button) {
   button.classList.toggle('following');
 }
 
-async function saveVideoWithWatermark(videoElement) {
-  try {
-    // Ensure video is loaded
-    if (videoElement.readyState < 2) {
-      await new Promise((resolve) => {
-        videoElement.addEventListener('loadeddata', resolve, { once: true });
-      });
-    }
+function getVideoIdFromUrl() {
+  const urlParams = new URLSearchParams(window.location.search);
+  return urlParams.get('v');
+}
 
-    // Pause any playing video
-    videoElement.pause();
-    
-    // Create canvas with video dimensions
-    const canvas = document.createElement('canvas');
-    const ctx = canvas.getContext('2d');
-    
-    canvas.width = videoElement.videoWidth;
-    canvas.height = videoElement.videoHeight;
-    
-    // Check for MediaRecorder support and available MIME types
-    if (!window.MediaRecorder) {
-      throw new Error('MediaRecorder não suportado neste dispositivo');
-    }
+function generateRandomString(length = 6) {
+  return Math.random().toString(36).substring(2, 2 + length);
+}
 
-    // Try different MIME types in order of preference
-    const mimeTypes = [
-      'video/webm;codecs=h264',
-      'video/webm;codecs=vp9',
-      'video/webm;codecs=vp8',
-      'video/webm',
-      'video/mp4'
-    ];
+function generateShareUrl(videoId) {
+  const randomString = generateRandomString();
+  return `${window.location.origin}${window.location.pathname}?${randomString}&v=${videoId}`;
+}
 
-    let selectedMimeType = null;
-    for (const mimeType of mimeTypes) {
-      if (MediaRecorder.isTypeSupported(mimeType)) {
-        selectedMimeType = mimeType;
-        break;
-      }
-    }
-
-    if (!selectedMimeType) {
-      throw new Error('Nenhum formato de vídeo suportado encontrado');
-    }
-
-    // Setup media recorder with supported format
-    const stream = canvas.captureStream(30); // 30 FPS
-    const mediaRecorder = new MediaRecorder(stream, {
-      mimeType: selectedMimeType,
-      videoBitsPerSecond: 2500000 // 2.5 Mbps for better mobile compatibility
-    });
-    
-    const chunks = [];
-    mediaRecorder.ondataavailable = (e) => chunks.push(e.data);
-    
-    // When recording stops, create and download the file
-    mediaRecorder.onstop = async () => {
-      const blob = new Blob(chunks, { type: selectedMimeType });
-      const url = URL.createObjectURL(blob);
-      
-      // For mobile Safari compatibility
-      if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
-        window.location.href = url;
-      } else {
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = 'fylo-video' + (selectedMimeType.includes('mp4') ? '.mp4' : '.webm');
-        a.style.display = 'none';
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-      }
-      
-      URL.revokeObjectURL(url);
-    };
-    
-    // Start recording
-    mediaRecorder.start(1000); // Capture in 1-second chunks for better memory usage
-    
-    // Reset video to start
-    videoElement.currentTime = 0;
-    
-    // Play video and start capturing frames
-    await videoElement.play();
-    
-    const drawFrame = () => {
-      if (videoElement.ended || videoElement.paused) {
-        mediaRecorder.stop();
-        videoElement.removeEventListener('timeupdate', drawFrame);
-        return;
-      }
-      
-      // Draw current video frame
-      ctx.drawImage(videoElement, 0, 0, canvas.width, canvas.height);
-      
-      // Add watermark
-      ctx.fillStyle = 'rgba(255, 255, 255, 0.7)';
-      ctx.font = `${Math.floor(canvas.height * 0.05)}px Arial`;
-      
-      const watermarkText = 'Fylo.online';
-      const textMetrics = ctx.measureText(watermarkText);
-      
-      const padding = canvas.width * 0.02;
-      const x = canvas.width - textMetrics.width - padding;
-      const y = canvas.height - padding;
-      
-      // Add semi-transparent background for watermark
-      ctx.fillStyle = 'rgba(0, 0, 0, 0.3)';
-      ctx.fillRect(
-        x - padding,
-        y - parseInt(ctx.font) + padding,
-        textMetrics.width + padding * 2,
-        parseInt(ctx.font)
-      );
-      
-      // Draw watermark text
-      ctx.fillStyle = 'rgba(255, 255, 255, 0.9)';
-      ctx.fillText(watermarkText, x, y);
-    };
-    
-    // Use timeupdate event for more reliable frame capture
-    videoElement.addEventListener('timeupdate', drawFrame);
-  } catch (error) {
-    console.error('Error saving video:', error);
-    if (error.message.includes('MediaRecorder')) {
-      throw new Error('Seu dispositivo não suporta salvar vídeos');
-    }
-    throw error;
+function highlightVideoById(videoId, videos) {
+  const videoIndex = videos.findIndex(video => video.id === videoId);
+  if (videoIndex !== -1) {
+      const [highlightedVideo] = videos.splice(videoIndex, 1);
+      videos.unshift(highlightedVideo);
   }
 }
 
@@ -684,16 +575,6 @@ function handleShare(video) {
     </button>
   </div>
   <div class="share-options">
-    <button class="share-option" data-platform="save">
-      <div class="share-icon-wrapper" style="background:rgb(81, 81, 81)">
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path>
-          <polyline points="17 21 17 13 7 13 7 21"></polyline>
-          <polyline points="7 3 7 8 15 8"></polyline>
-        </svg>
-      </div>
-      <span class="share-option-label">Salvar vídeo</span>
-    </button>
     <button class="share-option" data-platform="whatsapp">
       <div class="share-icon-wrapper" style="background: #25D366">
         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -743,23 +624,9 @@ function handleShare(video) {
   });
 
   shareMenu.querySelectorAll('.share-option').forEach(option => {
-      option.addEventListener('click', async () => {
+      option.addEventListener('click', () => {
           const platform = option.dataset.platform;
-          if (platform === 'save') {
-            const videoElement = document.querySelector(`video[src="${video.url}"]`);
-            if (videoElement) {
-              try {
-                showToast('Preparando o vídeo...');
-                await saveVideoWithWatermark(videoElement);
-                showToast('Vídeo salvo com sucesso!');
-              } catch (error) {
-                console.error('Error saving video:', error);
-                showToast(error.message || 'Erro ao salvar o vídeo');
-              }
-            }
-          } else {
-            shareToSocialMedia(platform, videoUrl, video);
-          }
+          shareToSocialMedia(platform, videoUrl, video);
       });
   });
 
@@ -828,27 +695,6 @@ function showToast(message) {
   }, 2000);
 }
 
-function getVideoIdFromUrl() {
-  const urlParams = new URLSearchParams(window.location.search);
-  return urlParams.get('v');
-}
-
-function generateRandomString(length = 6) {
-  return Math.random().toString(36).substring(2, 2 + length);
-}
-
-function generateShareUrl(videoId) {
-  const randomString = generateRandomString();
-  return `${window.location.origin}${window.location.pathname}?${randomString}&v=${videoId}`;
-}
-
-function highlightVideoById(videoId, videos) {
-  const videoIndex = videos.findIndex(video => video.id === videoId);
-  if (videoIndex !== -1) {
-      const [highlightedVideo] = videos.splice(videoIndex, 1);
-      videos.unshift(highlightedVideo);
-  }
-}
 // Double tap para curtir
 let lastTap = 0;
 document.addEventListener('touchstart', (e) => {
