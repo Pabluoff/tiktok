@@ -531,20 +531,71 @@ function handleFollow(button) {
   button.classList.toggle('following');
 }
 
-function getVideoIdFromUrl() {
-  const urlParams = new URLSearchParams(window.location.search);
-  return urlParams.get('v');
-}
+async function saveVideoWithWatermark(video) {
+  try {
+    const videoElement = document.querySelector(`video[src="${video.url}"]`);
+    if (!videoElement) throw new Error('Video element not found');
 
-function generateShareUrl(videoId) {
-  return `${window.location.origin}${window.location.pathname}?v=${videoId}`;
-}
+    // Pause the video and reset to start
+    videoElement.pause();
+    videoElement.currentTime = 0;
 
-function highlightVideoById(videoId, videos) {
-  const videoIndex = videos.findIndex(video => video.id === videoId);
-  if (videoIndex !== -1) {
-      const [highlightedVideo] = videos.splice(videoIndex, 1);
-      videos.unshift(highlightedVideo);
+    // Create canvas for video processing
+    const canvas = document.createElement('canvas');
+    const ctx = canvas.getContext('2d');
+    canvas.width = videoElement.videoWidth;
+    canvas.height = videoElement.videoHeight;
+
+    // Create MediaRecorder to record canvas
+    const stream = canvas.captureStream(30); // 30 FPS
+    const mediaRecorder = new MediaRecorder(stream, {
+      mimeType: 'video/webm;codecs=vp9',
+      videoBitsPerSecond: 5000000 // 5Mbps for good quality
+    });
+
+    const chunks = [];
+    mediaRecorder.ondataavailable = (e) => chunks.push(e.data);
+    mediaRecorder.onstop = () => {
+      const blob = new Blob(chunks, { type: 'video/webm' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `fylo-${video.id}.webm`;
+      link.click();
+      URL.revokeObjectURL(url);
+      showToast('Vídeo salvo com sucesso!');
+    };
+
+    // Start recording
+    mediaRecorder.start();
+    showToast('Processando vídeo...');
+
+    // Function to draw frame with watermark
+    function drawFrame() {
+      ctx.drawImage(videoElement, 0, 0, canvas.width, canvas.height);
+      
+      // Add watermark
+      ctx.fillStyle = 'rgba(255, 255, 255, 0.8)';
+      ctx.font = `${canvas.width * 0.05}px Arial`;
+      ctx.textAlign = 'end';
+      ctx.textBaseline = 'bottom';
+      ctx.fillText('Fylo.online', canvas.width - 20, canvas.height - 20);
+
+      if (videoElement.currentTime < videoElement.duration) {
+        requestAnimationFrame(drawFrame);
+      } else {
+        mediaRecorder.stop();
+        videoElement.pause();
+      }
+    }
+
+    // Play video and start drawing frames
+    await videoElement.play();
+    drawFrame();
+
+  } catch (error) {
+    console.error('Error saving video:', error);
+    showToast('Erro ao salvar o vídeo');
   }
 }
 
@@ -603,6 +654,16 @@ function handleShare(video) {
       </div>
       <span class="share-option-label">Facebook</span>
     </button>
+    <button class="share-option" data-platform="save">
+      <div class="share-icon-wrapper" style="background:rgb(61, 61, 61)">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+          <polyline points="7 10 12 15 17 10"/>
+          <line x1="12" y1="15" x2="12" y2="3"/>
+        </svg>
+      </div>
+      <span class="share-option-label">Salvar</span>
+    </button>
   </div>
   <div class="share-link">
     <input type="text" value="${videoUrl}" readonly>
@@ -614,67 +675,85 @@ function handleShare(video) {
   document.body.appendChild(shareMenu);
 
   requestAnimationFrame(() => {
-      shareOverlay.classList.add('active');
-      shareMenu.classList.add('active');
+    shareOverlay.classList.add('active');
+    shareMenu.classList.add('active');
   });
 
   shareMenu.querySelectorAll('.share-option').forEach(option => {
-      option.addEventListener('click', () => {
-          const platform = option.dataset.platform;
-          shareToSocialMedia(platform, videoUrl, video);
-      });
+    option.addEventListener('click', () => {
+      const platform = option.dataset.platform;
+      if (platform === 'save') {
+        saveVideoWithWatermark(video);
+      } else {
+        shareToSocialMedia(platform, videoUrl, video);
+      }
+    });
   });
 
   const copyButton = shareMenu.querySelector('.copy-button');
   const linkInput = shareMenu.querySelector('input');
 
   copyButton.addEventListener('click', () => {
-      linkInput.select();
-      document.execCommand('copy');
-      showToast('Link copiado!');
+    linkInput.select();
+    document.execCommand('copy');
+    showToast('Link copiado!');
   });
 
   const closeButton = shareMenu.querySelector('.share-menu-close');
   const closeMenu = () => {
-      shareOverlay.classList.remove('active');
-      shareMenu.classList.remove('active');
-      setTimeout(() => {
-          shareOverlay.remove();
-          shareMenu.remove();
-      }, 300);
+    shareOverlay.classList.remove('active');
+    shareMenu.classList.remove('active');
+    setTimeout(() => {
+      shareOverlay.remove();
+      shareMenu.remove();
+    }, 300);
   };
 
   closeButton.addEventListener('click', closeMenu);
   shareOverlay.addEventListener('click', closeMenu);
 }
 
+function showToast(message) {
+  const toast = document.createElement('div');
+  toast.className = 'toast';
+  toast.textContent = message;
+  document.body.appendChild(toast);
+
+  requestAnimationFrame(() => {
+    toast.classList.add('active');
+  });
+
+  setTimeout(() => {
+    toast.classList.remove('active');
+    setTimeout(() => toast.remove(), 300);
+  }, 2000);
+}
+
 function shareToSocialMedia(platform, url, video) {
-  function getRandomShareText(videoUsername) {
-      const texts = [
-          `👀 Olha o vídeo de ${videoUsername}`,
-          `Olha ${videoUsername} nesse vídeo 😳`,
-          `Nossa.... ${videoUsername}, tem um talento incrível🔥 `,
-          `O que ${videoUsername} fez nesse vídeo? Você não vai acreditar...`,
-          `Sabe aquele vídeo que te deixa com vontade de ver mais? É esse de ${videoUsername}!`,
-          `Se você acha que já viu tudo, espere até ver esse vídeo de ${videoUsername}!`
-      ];
-
-      const randomIndex = Math.floor(Math.random() * texts.length);
-      return encodeURIComponent(texts[randomIndex]);
-  }
-
-  const text = getRandomShareText(video.username);
+  const text = encodeURIComponent(`Confira este vídeo incrível de ${video.username}!`);
   const shareUrls = {
-      whatsapp: `https://api.whatsapp.com/send?text=${text}%20${url}`,
-      telegram: `https://t.me/share/url?url=${url}&text=${text}`,
-      twitter: `https://twitter.com/intent/tweet?text=${text}&url=${url}`,
-      facebook: `https://www.facebook.com/sharer/sharer.php?u=${url}`
+    whatsapp: `https://api.whatsapp.com/send?text=${text}%20${url}`,
+    telegram: `https://t.me/share/url?url=${url}&text=${text}`,
+    twitter: `https://twitter.com/intent/tweet?text=${text}&url=${url}`,
+    facebook: `https://www.facebook.com/sharer/sharer.php?u=${url}`
   };
 
   window.open(shareUrls[platform], '_blank');
 }
 
-function showToast(message) {
+function getVideoIdFromUrl() {
+  const urlParams = new URLSearchParams(window.location.search);
+  return urlParams.get('v');
+}
+
+function generateRandomString(length = 6) {
+  return Math.random().toString(36).substring(2, 2 + length);
+}
+
+function generateShareUrl(videoId) {
+  const randomString = generateRandomString();
+  return `${window.location.origin}${window.location.pathname}?${randomString}&v=${videoId}`;
+}function showToast(message) {
   const toast = document.createElement('div');
   toast.className = 'toast';
   toast.textContent = message;
