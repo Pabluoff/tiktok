@@ -550,11 +550,37 @@ async function saveVideoWithWatermark(videoElement) {
     canvas.width = videoElement.videoWidth;
     canvas.height = videoElement.videoHeight;
     
-    // Setup media recorder
+    // Check for MediaRecorder support and available MIME types
+    if (!window.MediaRecorder) {
+      throw new Error('MediaRecorder não suportado neste dispositivo');
+    }
+
+    // Try different MIME types in order of preference
+    const mimeTypes = [
+      'video/webm;codecs=h264',
+      'video/webm;codecs=vp9',
+      'video/webm;codecs=vp8',
+      'video/webm',
+      'video/mp4'
+    ];
+
+    let selectedMimeType = null;
+    for (const mimeType of mimeTypes) {
+      if (MediaRecorder.isTypeSupported(mimeType)) {
+        selectedMimeType = mimeType;
+        break;
+      }
+    }
+
+    if (!selectedMimeType) {
+      throw new Error('Nenhum formato de vídeo suportado encontrado');
+    }
+
+    // Setup media recorder with supported format
     const stream = canvas.captureStream(30); // 30 FPS
     const mediaRecorder = new MediaRecorder(stream, {
-      mimeType: 'video/webm;codecs=vp9',
-      videoBitsPerSecond: 5000000 // 5 Mbps for good quality
+      mimeType: selectedMimeType,
+      videoBitsPerSecond: 2500000 // 2.5 Mbps for better mobile compatibility
     });
     
     const chunks = [];
@@ -562,21 +588,27 @@ async function saveVideoWithWatermark(videoElement) {
     
     // When recording stops, create and download the file
     mediaRecorder.onstop = async () => {
-      const blob = new Blob(chunks, { type: 'video/webm' });
+      const blob = new Blob(chunks, { type: selectedMimeType });
       const url = URL.createObjectURL(blob);
       
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = 'fylo-video.webm';
-      document.body.appendChild(a);
-      a.click();
+      // For mobile Safari compatibility
+      if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+        window.location.href = url;
+      } else {
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'fylo-video' + (selectedMimeType.includes('mp4') ? '.mp4' : '.webm');
+        a.style.display = 'none';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+      }
       
-      document.body.removeChild(a);
       URL.revokeObjectURL(url);
     };
     
     // Start recording
-    mediaRecorder.start();
+    mediaRecorder.start(1000); // Capture in 1-second chunks for better memory usage
     
     // Reset video to start
     videoElement.currentTime = 0;
@@ -623,6 +655,9 @@ async function saveVideoWithWatermark(videoElement) {
     videoElement.addEventListener('timeupdate', drawFrame);
   } catch (error) {
     console.error('Error saving video:', error);
+    if (error.message.includes('MediaRecorder')) {
+      throw new Error('Seu dispositivo não suporta salvar vídeos');
+    }
     throw error;
   }
 }
@@ -719,7 +754,7 @@ function handleShare(video) {
                 showToast('Vídeo salvo com sucesso!');
               } catch (error) {
                 console.error('Error saving video:', error);
-                showToast('Erro ao salvar o vídeo');
+                showToast(error.message || 'Erro ao salvar o vídeo');
               }
             }
           } else {
