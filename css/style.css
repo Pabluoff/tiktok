@@ -147,26 +147,6 @@ body {
   gap: 0.5rem;
 }
 
-.follow-button {
-  background: #FE2C55;
-  border: none;
-  color: #ffffff;
-  padding: 0.25rem 1rem;
-  border-radius: 4px;
-  font-size: 0.9rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: background-color 0.2s ease;
-}
-
-.follow-button:hover {
-  background: #e91c43;
-}
-
-.follow-button.following {
-  background: #1f1f1f;
-}
-
 .video-info .description {
   font-size: 0.9rem;
   max-width: 80%;
@@ -284,22 +264,88 @@ body {
   fill: #FFFC00;
 }
 
-.add-button {
+.follow-button {
   position: absolute;
   top: 50px;
-  width: 23px;
-  height: 23px;
+  padding: 6px 8px; 
   background: linear-gradient(45deg, #ff345c, #e41654, #ff0090);
+  background-size: 200% 200%;
   box-shadow: 0 0 10px rgba(255, 52, 92, 0.8);
   border: none;
   color: white;
   font-weight: bold;
-  border-radius: 50%;
+  font-size: 11px; 
+  border-radius: 6px;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
   z-index: 2;
+  animation: gradientAnimation 3s ease infinite;
+}
+
+.follow-button:hover {
+  background: linear-gradient(45deg, #ff0090, #ff345c, #e41654);
+  box-shadow: 0 0 15px rgba(255, 52, 92, 1);
+  transform: scale(1.05);
+  transition: all 0.3s ease;
+}
+
+.follow-button:active {
+  transform: scale(0.95);
+  box-shadow: 0 0 5px rgba(255, 52, 92, 0.8);
+  transition: all 0.1s ease;
+}
+
+.follow-button::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  border-radius: 7px;
+  background: linear-gradient(45deg, rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0));
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.follow-button:hover::after {
+  opacity: 1;
+}
+
+.follow-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.follow-button:hover span {
+  display: inline-block;
+  animation: floatText 0.5s ease-in-out;
+}
+
+@keyframes floatText {
+  0% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-5px);
+  }
+  100% {
+    transform: translateY(0);
+  }
+}
+
+@keyframes gradientAnimation {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
 }
 
 .user-profile {
@@ -310,9 +356,8 @@ body {
   overflow: hidden;
   margin-top: 16px;
   cursor: pointer;
-  transition: transform 0.2s ease;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
-
 
 .user-profile img {
   width: 100%;
@@ -352,10 +397,17 @@ body {
 }
 
 
+.create-button {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 .create-button .plus-icon {
-  width: 3.0rem; 
-  height: 2.5rem;
-  background: linear-gradient(45deg, #a1a1a1, #a1a1a1, #a1a1a1);
+  width: 3rem;
+  height: 3rem;
+  background: linear-gradient(45deg, #ff0050, #ff0050, #ff0050);
   border-radius: 0.6rem;
   display: flex;
   align-items: center;
@@ -363,6 +415,7 @@ body {
   position: relative;
   z-index: 1;
   color: white;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 .create-button .plus-icon::before {
@@ -374,9 +427,17 @@ body {
   bottom: 0;
   background: black;
   border-radius: 0.5rem;
-  margin: 2px; 
+  margin: 2px;
   z-index: -1;
 }
+
+.create-button .plus-icon svg {
+  width: 24px;
+  height: 24px;
+  stroke: white;
+  stroke-width: 2;
+}
+
 
 @keyframes heartBeat {
   0% {
