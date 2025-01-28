@@ -60,8 +60,8 @@ body {
   content: '';
   position: absolute;
   bottom: -4px;
-  left: 0;
-  right: 0;
+  left: 30%;
+  right: 30%;
   height: 2px;
   background-color: white;
 }
@@ -185,7 +185,7 @@ body {
 }
 
 .video-info .hashtags {
-  color: #FE2C55;
+  color: #e1e1e1;
   font-size: 0.9rem;
   margin-bottom: 0.5rem;
 }
@@ -295,20 +295,36 @@ body {
   fill: #FFFC00;
 }
 
+.add-button {
+  position: absolute;
+  top: 50px;
+  width: 23px;
+  height: 23px;
+  background: linear-gradient(45deg, #ff345c, #e41654, #ff0090);
+  box-shadow: 0 0 10px rgba(255, 52, 92, 0.8);
+  border: none;
+  color: white;
+  font-size: 16px;
+  font-weight: bold;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 2;
+}
+
 .user-profile {
   width: 48px;
   height: 48px;
   border-radius: 50%;
   border: 2px solid white;
   overflow: hidden;
-  margin-bottom: 0.5rem;
+  margin-top: 16px;
   cursor: pointer;
   transition: transform 0.2s ease;
 }
 
-.user-profile:hover {
-  transform: scale(1.1);
-}
 
 .user-profile img {
   width: 100%;
@@ -343,29 +359,22 @@ body {
   margin-bottom: 30px;
 }
 
-.nav-item.active-home svg {
+.nav-item.active {
   color: white;
-  fill: white;
 }
 
-.nav-item.active-home {
-  color: #ffffff;
-}
-
-.nav-item span {
-  font-size: 0.7rem;
-}
 
 .create-button .plus-icon {
-  width: 3.5rem; 
+  width: 3.0rem; 
   height: 2.5rem;
-  background: linear-gradient(45deg, #FE2C55, #e91c43, #ff00c8);
+  background: linear-gradient(45deg, #a1a1a1, #a1a1a1, #a1a1a1);
   border-radius: 0.6rem;
   display: flex;
   align-items: center;
   justify-content: center;
   position: relative;
   z-index: 1;
+  color: white;
 }
 
 .create-button .plus-icon::before {
@@ -375,7 +384,7 @@ body {
   left: 0;
   right: 0;
   bottom: 0;
-  background: linear-gradient(45deg, #000000, #1d1d1d, #000000);
+  background: black;
   border-radius: 0.5rem;
   margin: 2px; 
   z-index: -1;
@@ -408,7 +417,7 @@ body {
   bottom: 0;
   left: 0;
   right: 0;
-  background: #1f1f1f;
+  background: #141414;
   border-radius: 16px 16px 0 0;
   padding: 1rem;
   transform: translateY(100%);
@@ -607,7 +616,7 @@ body {
   bottom: 0;
   left: 0;
   right: 0;
-  background: #1f1f1f;
+  background: #141414;
   border-radius: 16px 16px 0 0;
   height: 70vh;
   transform: translateY(100%);

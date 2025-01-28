@@ -21,8 +21,8 @@ function reorderVideos(videos, sharedVideoId) {
   const sharedVideoIndex = videosCopy.findIndex(v => v.id === sharedVideoId);
 
   if (sharedVideoIndex !== -1) {
-      const [sharedVideo] = videosCopy.splice(sharedVideoIndex, 1);
-      videosCopy.unshift(sharedVideo);
+    const [sharedVideo] = videosCopy.splice(sharedVideoIndex, 1);
+    videosCopy.unshift(sharedVideo);
   }
 
   return videosCopy;
@@ -30,44 +30,44 @@ function reorderVideos(videos, sharedVideoId) {
 
 
 const videos = [{
-      id: '1',
-      url: './img/modelo2.MP4',
-      username: 'Michelly Cardoso',
-      description: 'Será que desse ângulo fica bom? 🤭',
-      hashtags: '#Fyp #Viral #Trendy',
-      music: 'som original - Michelly Cardoso',
-      likes: '16.5K',
-      comments: '1.8K',
-      bookmarks: '4.1K',
-      shares: '14.2K',
-      userProfile: 'https://images.unsplash.com/photo-1633332755192-727a05c4013d?w=64&h=64&fit=crop'
-  },
-  {
-      id: '2',
-      url: './img/modelo3.MP4',
-      username: 'Sarah Beaulty',
-      description: '🌸 Rosa é minha cor favorita',
-      hashtags: '#nature #beautiful #pink',
-      music: 'som original - Sarah Beaulty',
-      likes: '23.4K',
-      comments: '8.2K',
-      bookmarks: '5.2K',
-      shares: '20.1K',
-      userProfile: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=64&h=64&fit=crop'
-  },
-  {
-      id: '3',
-      url: './img/modelo2.MP4',
-      username: 'Michelly Cardoso',
-      description: 'Será que desse ângulo fica bom? 🤭',
-      hashtags: '#Fyp #Viral #Trendy',
-      music: 'som original - Michelly Cardoso',
-      likes: '16.5K',
-      comments: '1.8K',
-      bookmarks: '4.1K',
-      shares: '14.2K',
-      userProfile: 'https://images.unsplash.com/photo-1633332755192-727a05c4013d?w=64&h=64&fit=crop'
-  }
+  id: '1',
+  url: './img/modelo2.MP4',
+  username: 'Michelly Cardoso',
+  description: 'Será que desse ângulo fica bom? 🤭',
+  hashtags: '#Fyp #Viral #Trendy',
+  music: 'som original - Michelly Cardoso',
+  likes: '16.5K',
+  comments: '1.8K',
+  bookmarks: '4.1K',
+  shares: '14.2K',
+  userProfile: 'https://images.unsplash.com/photo-1633332755192-727a05c4013d?w=64&h=64&fit=crop'
+},
+{
+  id: '2',
+  url: './img/modelo3.MP4',
+  username: 'Sarah Beaulty',
+  description: '🌸 Rosa é minha cor favorita',
+  hashtags: '#nature #beautiful #pink',
+  music: 'som original - Sarah Beaulty',
+  likes: '23.4K',
+  comments: '8.2K',
+  bookmarks: '5.2K',
+  shares: '20.1K',
+  userProfile: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=64&h=64&fit=crop'
+},
+{
+  id: '3',
+  url: './img/modelo2.MP4',
+  username: 'Michelly Cardoso',
+  description: 'Será que desse ângulo fica bom? 🤭',
+  hashtags: '#Fyp #Viral #Trendy',
+  music: 'som original - Michelly Cardoso',
+  likes: '16.5K',
+  comments: '1.8K',
+  bookmarks: '4.1K',
+  shares: '14.2K',
+  userProfile: 'https://images.unsplash.com/photo-1633332755192-727a05c4013d?w=64&h=64&fit=crop'
+}
 ];
 
 const videoIdFromUrl = getVideoIdFromUrl();
@@ -83,10 +83,10 @@ try {
   const savedBookmarks = localStorage.getItem('bookmarkedVideos');
 
   if (savedLikes) {
-      likedVideos = JSON.parse(savedLikes);
+    likedVideos = JSON.parse(savedLikes);
   }
   if (savedBookmarks) {
-      bookmarkedVideos = JSON.parse(savedBookmarks);
+    bookmarkedVideos = JSON.parse(savedBookmarks);
   }
 } catch (error) {
   console.error('Error loading saved data:', error);
@@ -134,23 +134,26 @@ function createVideoElement(video, isShared = false) {
   <div class="video-info">
     <div class="username">
       ${video.username}
-      <button class="follow-button">Seguir</button>
     </div>
     <div class="description">${video.description}</div>
     <div class="hashtags">${video.hashtags}</div>
     <div class="music">
-      <svg class="music-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M9 18V5l12-2v13"/>
-        <circle cx="6" cy="18" r="3"/>
-        <circle cx="18" cy="16" r="3"/>
-      </svg>
-      ${video.music}
+        <div class="music">
+            <svg class="music-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                class="bi bi-music-note-beamed" viewBox="0 0 16 16">
+                <path
+                    d="M6 13c0 1.105-1.12 2-2.5 2S1 14.105 1 13s1.12-2 2.5-2 2.5.896 2.5 2m9-2c0 1.105-1.12 2-2.5 2s-2.5-.895-2.5-2 1.12-2 2.5-2 2.5.895 2.5 2" />
+                <path fill-rule="evenodd" d="M14 11V2h1v9zM6 3v10H5V3z" />
+                <path d="M5 2.905a1 1 0 0 1 .9-.995l8-.8a1 1 0 0 1 1.1.995V3L5 4z" />
+            </svg> 
+          ${video.music}
     </div>
   </div>
   <div class="video-actions">
-    <div class="user-profile">
-      <img src="${video.userProfile}" alt="Profile">
-    </div>
+           <button class="add-button">+</button>
+            <div class="user-profile">
+                <img src="${video.userProfile}" alt="Profile">
+            </div>
     <button class="action-button ${likedClass}" data-action="like">
       <div class="icon-container">
         <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-heart-fill" viewBox="0 0 16 16">
@@ -219,88 +222,88 @@ function initializeFeed() {
   feed.innerHTML = '';
 
   reorderedVideos.forEach((video) => {
-      const isShared = sharedVideoId === video.id;
-      const videoElement = createVideoElement(video, isShared);
-      feed.appendChild(videoElement);
+    const isShared = sharedVideoId === video.id;
+    const videoElement = createVideoElement(video, isShared);
+    feed.appendChild(videoElement);
 
-      const videoTag = videoElement.querySelector('video');
-      const subProgressBar = videoElement.querySelector('.sub-progress-bar');
-      const progressBar = videoElement.querySelector('.progress-bar');
-      const progressDot = videoElement.querySelector('.progress-dot');
-      const timeDisplay = videoElement.querySelector('.time-display');
-      const videoInfo = videoElement.querySelector('.video-info');
-      const videoActions = videoElement.querySelector('.video-actions');
+    const videoTag = videoElement.querySelector('video');
+    const subProgressBar = videoElement.querySelector('.sub-progress-bar');
+    const progressBar = videoElement.querySelector('.progress-bar');
+    const progressDot = videoElement.querySelector('.progress-dot');
+    const timeDisplay = videoElement.querySelector('.time-display');
+    const videoInfo = videoElement.querySelector('.video-info');
+    const videoActions = videoElement.querySelector('.video-actions');
 
-      const currentTimeSpan = document.createElement('span');
-      currentTimeSpan.classList.add('current-time');
-      const totalTimeSpan = document.createElement('span');
-      totalTimeSpan.classList.add('total-time');
-      timeDisplay.innerHTML = '';
-      timeDisplay.appendChild(currentTimeSpan);
-      timeDisplay.appendChild(document.createTextNode(' / '));
-      timeDisplay.appendChild(totalTimeSpan);
+    const currentTimeSpan = document.createElement('span');
+    currentTimeSpan.classList.add('current-time');
+    const totalTimeSpan = document.createElement('span');
+    totalTimeSpan.classList.add('total-time');
+    timeDisplay.innerHTML = '';
+    timeDisplay.appendChild(currentTimeSpan);
+    timeDisplay.appendChild(document.createTextNode(' / '));
+    timeDisplay.appendChild(totalTimeSpan);
 
-      videoTag.addEventListener('loadedmetadata', () => {
-          totalTimeSpan.textContent = formatTime(videoTag.duration);
-      });
+    videoTag.addEventListener('loadedmetadata', () => {
+      totalTimeSpan.textContent = formatTime(videoTag.duration);
+    });
 
-      videoTag.addEventListener('timeupdate', () => {
-          const percentage = (videoTag.currentTime / videoTag.duration) * 100;
-          progressBar.style.width = `${percentage}%`;
-          progressDot.style.transform = `translate(${percentage}%, -50%)`;
+    videoTag.addEventListener('timeupdate', () => {
+      const percentage = (videoTag.currentTime / videoTag.duration) * 100;
+      progressBar.style.width = `${percentage}%`;
+      progressDot.style.transform = `translate(${percentage}%, -50%)`;
 
-          if (!isInteracting) {
-              currentTimeSpan.textContent = formatTime(videoTag.currentTime);
-          }
-      });
+      if (!isInteracting) {
+        currentTimeSpan.textContent = formatTime(videoTag.currentTime);
+      }
+    });
 
-      const startInteraction = (event) => {
-          isInteracting = true;
-          subProgressBar.classList.add('interacting');
+    const startInteraction = (event) => {
+      isInteracting = true;
+      subProgressBar.classList.add('interacting');
 
-          document.querySelectorAll('.video-info').forEach(info => info.classList.add('hidden'));
-          document.querySelectorAll('.video-actions').forEach(actions => actions.classList.add('hidden'));
-          document.querySelectorAll('.time-display').forEach(timer => timer.classList.add('visible'));
-          document.querySelectorAll('.shared-badge-container').forEach(badge => badge.classList.add('hidden'));
+      document.querySelectorAll('.video-info').forEach(info => info.classList.add('hidden'));
+      document.querySelectorAll('.video-actions').forEach(actions => actions.classList.add('hidden'));
+      document.querySelectorAll('.time-display').forEach(timer => timer.classList.add('visible'));
+      document.querySelectorAll('.shared-badge-container').forEach(badge => badge.classList.add('hidden'));
 
-          updateProgress(event);
-          feed.style.overflowY = 'hidden';
-      };
+      updateProgress(event);
+      feed.style.overflowY = 'hidden';
+    };
 
-      const stopInteraction = () => {
-          if (isInteracting) {
-              isInteracting = false;
-              subProgressBar.classList.remove('interacting');
+    const stopInteraction = () => {
+      if (isInteracting) {
+        isInteracting = false;
+        subProgressBar.classList.remove('interacting');
 
-              document.querySelectorAll('.video-info').forEach(info => info.classList.remove('hidden'));
-              document.querySelectorAll('.video-actions').forEach(actions => actions.classList.remove('hidden'));
-              document.querySelectorAll('.time-display').forEach(timer => timer.classList.remove('visible'));
-              document.querySelectorAll('.shared-badge-container').forEach(badge => badge.classList.remove('hidden'));
+        document.querySelectorAll('.video-info').forEach(info => info.classList.remove('hidden'));
+        document.querySelectorAll('.video-actions').forEach(actions => actions.classList.remove('hidden'));
+        document.querySelectorAll('.time-display').forEach(timer => timer.classList.remove('visible'));
+        document.querySelectorAll('.shared-badge-container').forEach(badge => badge.classList.remove('hidden'));
 
-              feed.style.overflowY = 'scroll';
-          }
-      };
+        feed.style.overflowY = 'scroll';
+      }
+    };
 
-      const updateProgress = (event) => {
-          if (!isInteracting) return;
+    const updateProgress = (event) => {
+      if (!isInteracting) return;
 
-          const rect = subProgressBar.getBoundingClientRect();
-          const offsetX = event.touches ? event.touches[0].clientX : event.clientX;
-          const percentage = Math.max(0, Math.min(1, (offsetX - rect.left) / rect.width));
+      const rect = subProgressBar.getBoundingClientRect();
+      const offsetX = event.touches ? event.touches[0].clientX : event.clientX;
+      const percentage = Math.max(0, Math.min(1, (offsetX - rect.left) / rect.width));
 
-          videoTag.currentTime = percentage * videoTag.duration;
-          currentTimeSpan.textContent = formatTime(videoTag.currentTime);
-          progressBar.style.width = `${percentage * 100}%`;
-          progressDot.style.transform = `translate(${percentage * 100}%, -50%)`;
-      };
+      videoTag.currentTime = percentage * videoTag.duration;
+      currentTimeSpan.textContent = formatTime(videoTag.currentTime);
+      progressBar.style.width = `${percentage * 100}%`;
+      progressDot.style.transform = `translate(${percentage * 100}%, -50%)`;
+    };
 
-      subProgressBar.addEventListener('mousedown', startInteraction);
-      subProgressBar.addEventListener('mousemove', updateProgress);
-      document.addEventListener('mouseup', stopInteraction);
+    subProgressBar.addEventListener('mousedown', startInteraction);
+    subProgressBar.addEventListener('mousemove', updateProgress);
+    document.addEventListener('mouseup', stopInteraction);
 
-      subProgressBar.addEventListener('touchstart', startInteraction);
-      subProgressBar.addEventListener('touchmove', updateProgress);
-      document.addEventListener('touchend', stopInteraction);
+    subProgressBar.addEventListener('touchstart', startInteraction);
+    subProgressBar.addEventListener('touchmove', updateProgress);
+    document.addEventListener('touchend', stopInteraction);
   });
 
   // Adiciona o anúncio de inscrição após os vídeos
@@ -309,87 +312,83 @@ function initializeFeed() {
 
   // Ajustar opacidade ao rolar
   feed.addEventListener('scroll', () => {
-      if (!isInteracting) {
-          document.querySelectorAll('.sub-progress-bar').forEach((bar) => {
-              bar.style.opacity = '0';
-          });
+    if (!isInteracting) {
+      document.querySelectorAll('.sub-progress-bar').forEach((bar) => {
+        bar.style.opacity = '0';
+      });
 
-          clearTimeout(feed.scrollTimeout);
+      clearTimeout(feed.scrollTimeout);
 
-          feed.scrollTimeout = setTimeout(() => {
-              document.querySelectorAll('.sub-progress-bar').forEach((bar) => {
-                  bar.style.opacity = '1';
-              });
-          }, 300);
-      }
+      feed.scrollTimeout = setTimeout(() => {
+        document.querySelectorAll('.sub-progress-bar').forEach((bar) => {
+          bar.style.opacity = '1';
+        });
+      }, 300);
+    }
   });
 
   if (sharedVideoId) {
-      const firstVideo = feed.querySelector('.video-container');
-      if (firstVideo) {
-          firstVideo.scrollIntoView({
-              behavior: 'auto'
-          });
-      }
+    const firstVideo = feed.querySelector('.video-container');
+    if (firstVideo) {
+      firstVideo.scrollIntoView({
+        behavior: 'auto'
+      });
+    }
   }
 
   const observer = new IntersectionObserver(
-      (entries) => {
-          entries.forEach((entry) => {
-              const video = entry.target.querySelector('video');
-              if (entry.isIntersecting) {
-                  video.play();
-              } else {
-                  video.pause();
-              }
-          });
-      }, {
-          threshold: 0.5
-      }
+    (entries) => {
+      entries.forEach((entry) => {
+        const video = entry.target.querySelector('video');
+        if (entry.isIntersecting) {
+          video.play();
+        } else {
+          video.pause();
+        }
+      });
+    }, {
+    threshold: 0.5
+  }
   );
 
   document.querySelectorAll('.video-container').forEach((container) => {
-      observer.observe(container);
+    observer.observe(container);
   });
 
   document.addEventListener('click', (e) => {
-      const video = e.target.closest('video');
-      const actionButton = e.target.closest('.action-button');
-      const followButton = e.target.closest('.follow-button');
+    const video = e.target.closest('video');
+    const actionButton = e.target.closest('.action-button');
 
-      if (video) {
-          if (video.paused) {
-              video.play();
-          } else {
-              video.pause();
-          }
+    if (video) {
+      if (video.paused) {
+        video.play();
+      } else {
+        video.pause();
       }
+    }
 
-      if (actionButton) {
-          const action = actionButton.dataset.action;
-          handleAction(action, actionButton);
-      }
+    if (actionButton) {
+      const action = actionButton.dataset.action;
+      handleAction(action, actionButton);
+    }
 
-      if (followButton) {
-          handleFollow(followButton);
-      }
   });
 }
 
 function parseValue(value) {
   if (value.includes('K')) {
-      return parseFloat(value.replace('K', '')) * 1000;
+    return parseFloat(value.replace('K', '')) * 1000;
   } else if (value.includes('M')) {
-      return parseFloat(value.replace('M', '')) * 1000000;
+    return parseFloat(value.replace('M', '')) * 1000000;
   }
   return parseInt(value.replace(/[^0-9]/g, ''));
 }
 
 function formatValue(value) {
   if (value >= 1000000) {
-      return (value / 1000000).toFixed(1) + 'M';
+    return (value / 1000000).toFixed(1) + 'M';
   } else if (value >= 1000) {
-      return (value / 1000).toFixed(1) + 'K';
+    return (value / 1000).toFixed(1) + 'K';
   }
   return value.toString();
 }
@@ -401,70 +400,70 @@ function handleAction(action, button, isDoubleClick = false) {
   const video = videos[videoIndex];
 
   switch (action) {
-      case 'like':
-          if (!isDoubleClick) {
-              const wasLiked = likedVideos[video.id] === true;
-              likedVideos[video.id] = !wasLiked;
-              localStorage.setItem('likedVideos', JSON.stringify(likedVideos));
+    case 'like':
+      if (!isDoubleClick) {
+        const wasLiked = likedVideos[video.id] === true;
+        likedVideos[video.id] = !wasLiked;
+        localStorage.setItem('likedVideos', JSON.stringify(likedVideos));
 
-              if (!wasLiked) {
-                  button.classList.add('liked');
-                  const currentLikes = parseValue(video.likes);
-                  if (currentLikes < 1000) {
-                      video.likes = formatValue(currentLikes + 1);
-                      count.textContent = video.likes;
-                  }
-              } else {
-                  button.classList.remove('liked');
-                  const currentLikes = parseValue(video.likes);
-                  if (currentLikes < 1000) {
-                      video.likes = formatValue(currentLikes - 1);
-                      count.textContent = video.likes;
-                  }
-              }
-          } else {
-              if (!likedVideos[video.id]) {
-                  likedVideos[video.id] = true;
-                  localStorage.setItem('likedVideos', JSON.stringify(likedVideos));
-                  button.classList.add('liked');
-                  const currentLikes = parseValue(video.likes);
-                  if (currentLikes < 1000) {
-                      video.likes = formatValue(currentLikes + 1);
-                      count.textContent = video.likes;
-                  }
-              }
+        if (!wasLiked) {
+          button.classList.add('liked');
+          const currentLikes = parseValue(video.likes);
+          if (currentLikes < 1000) {
+            video.likes = formatValue(currentLikes + 1);
+            count.textContent = video.likes;
           }
-          break;
-
-      case 'bookmark':
-          const wasBookmarked = bookmarkedVideos[video.id] === true;
-          bookmarkedVideos[video.id] = !wasBookmarked;
-          localStorage.setItem('bookmarkedVideos', JSON.stringify(bookmarkedVideos));
-
-          if (!wasBookmarked) {
-              button.classList.add('bookmarked');
-              const currentBookmarks = parseValue(video.bookmarks);
-              if (currentBookmarks < 1000) {
-                  video.bookmarks = formatValue(currentBookmarks + 1);
-                  count.textContent = video.bookmarks;
-              }
-          } else {
-              button.classList.remove('bookmarked');
-              const currentBookmarks = parseValue(video.bookmarks);
-              if (currentBookmarks < 1000) {
-                  video.bookmarks = formatValue(currentBookmarks - 1);
-                  count.textContent = video.bookmarks;
-              }
+        } else {
+          button.classList.remove('liked');
+          const currentLikes = parseValue(video.likes);
+          if (currentLikes < 1000) {
+            video.likes = formatValue(currentLikes - 1);
+            count.textContent = video.likes;
           }
-          break;
+        }
+      } else {
+        if (!likedVideos[video.id]) {
+          likedVideos[video.id] = true;
+          localStorage.setItem('likedVideos', JSON.stringify(likedVideos));
+          button.classList.add('liked');
+          const currentLikes = parseValue(video.likes);
+          if (currentLikes < 1000) {
+            video.likes = formatValue(currentLikes + 1);
+            count.textContent = video.likes;
+          }
+        }
+      }
+      break;
 
-      case 'share':
-          handleShare(video);
-          break;
+    case 'bookmark':
+      const wasBookmarked = bookmarkedVideos[video.id] === true;
+      bookmarkedVideos[video.id] = !wasBookmarked;
+      localStorage.setItem('bookmarkedVideos', JSON.stringify(bookmarkedVideos));
 
-      case 'comment':
-          handleComment(video);
-          break;
+      if (!wasBookmarked) {
+        button.classList.add('bookmarked');
+        const currentBookmarks = parseValue(video.bookmarks);
+        if (currentBookmarks < 1000) {
+          video.bookmarks = formatValue(currentBookmarks + 1);
+          count.textContent = video.bookmarks;
+        }
+      } else {
+        button.classList.remove('bookmarked');
+        const currentBookmarks = parseValue(video.bookmarks);
+        if (currentBookmarks < 1000) {
+          video.bookmarks = formatValue(currentBookmarks - 1);
+          count.textContent = video.bookmarks;
+        }
+      }
+      break;
+
+    case 'share':
+      handleShare(video);
+      break;
+
+    case 'comment':
+      handleComment(video);
+      break;
   }
 }
 
@@ -504,32 +503,28 @@ function handleComment(video) {
   document.body.appendChild(commentModal);
 
   requestAnimationFrame(() => {
-      commentOverlay.classList.add('active');
-      commentModal.classList.add('active');
+    commentOverlay.classList.add('active');
+    commentModal.classList.add('active');
   });
 
   const closeButton = commentModal.querySelector('.comment-close');
   const closeModal = () => {
-      commentOverlay.classList.remove('active');
-      commentModal.classList.remove('active');
-      setTimeout(() => {
-          commentOverlay.remove();
-          commentModal.remove();
-      }, 300);
+    commentOverlay.classList.remove('active');
+    commentModal.classList.remove('active');
+    setTimeout(() => {
+      commentOverlay.remove();
+      commentModal.remove();
+    }, 300);
   };
 
   closeButton.addEventListener('click', closeModal);
   commentOverlay.addEventListener('click', (e) => {
-      if (e.target === commentOverlay) {
-          closeModal();
-      }
+    if (e.target === commentOverlay) {
+      closeModal();
+    }
   });
 }
 
-function handleFollow(button) {
-  button.textContent = button.textContent === 'Seguir' ? 'Seguindo' : 'Seguir';
-  button.classList.toggle('following');
-}
 
 function getVideoIdFromUrl() {
   const urlParams = new URLSearchParams(window.location.search);
@@ -548,8 +543,8 @@ function generateShareUrl(videoId) {
 function highlightVideoById(videoId, videos) {
   const videoIndex = videos.findIndex(video => video.id === videoId);
   if (videoIndex !== -1) {
-      const [highlightedVideo] = videos.splice(videoIndex, 1);
-      videos.unshift(highlightedVideo);
+    const [highlightedVideo] = videos.splice(videoIndex, 1);
+    videos.unshift(highlightedVideo);
   }
 }
 
@@ -619,34 +614,34 @@ function handleShare(video) {
   document.body.appendChild(shareMenu);
 
   requestAnimationFrame(() => {
-      shareOverlay.classList.add('active');
-      shareMenu.classList.add('active');
+    shareOverlay.classList.add('active');
+    shareMenu.classList.add('active');
   });
 
   shareMenu.querySelectorAll('.share-option').forEach(option => {
-      option.addEventListener('click', () => {
-          const platform = option.dataset.platform;
-          shareToSocialMedia(platform, videoUrl, video);
-      });
+    option.addEventListener('click', () => {
+      const platform = option.dataset.platform;
+      shareToSocialMedia(platform, videoUrl, video);
+    });
   });
 
   const copyButton = shareMenu.querySelector('.copy-button');
   const linkInput = shareMenu.querySelector('input');
 
   copyButton.addEventListener('click', () => {
-      linkInput.select();
-      document.execCommand('copy');
-      showToast('Link copiado!');
+    linkInput.select();
+    document.execCommand('copy');
+    showToast('Link copiado!');
   });
 
   const closeButton = shareMenu.querySelector('.share-menu-close');
   const closeMenu = () => {
-      shareOverlay.classList.remove('active');
-      shareMenu.classList.remove('active');
-      setTimeout(() => {
-          shareOverlay.remove();
-          shareMenu.remove();
-      }, 300);
+    shareOverlay.classList.remove('active');
+    shareMenu.classList.remove('active');
+    setTimeout(() => {
+      shareOverlay.remove();
+      shareMenu.remove();
+    }, 300);
   };
 
   closeButton.addEventListener('click', closeMenu);
@@ -655,25 +650,25 @@ function handleShare(video) {
 
 function shareToSocialMedia(platform, url, video) {
   function getRandomShareText(videoUsername) {
-      const texts = [
-          `👀 Olha o vídeo de ${videoUsername}`,
-          `Olha ${videoUsername} nesse vídeo 😳`,
-          `Nossa.... ${videoUsername}, tem um talento incrível🔥 `,
-          `O que ${videoUsername} fez nesse vídeo? Você não vai acreditar...`,
-          `Sabe aquele vídeo que te deixa com vontade de ver mais? É esse de ${videoUsername}!`,
-          `Se você acha que já viu tudo, espere até ver esse vídeo de ${videoUsername}!`
-      ];
+    const texts = [
+      `👀 Olha o vídeo de ${videoUsername}`,
+      `Olha ${videoUsername} nesse vídeo 😳`,
+      `Nossa.... ${videoUsername}, tem um talento incrível🔥 `,
+      `O que ${videoUsername} fez nesse vídeo? Você não vai acreditar...`,
+      `Sabe aquele vídeo que te deixa com vontade de ver mais? É esse de ${videoUsername}!`,
+      `Se você acha que já viu tudo, espere até ver esse vídeo de ${videoUsername}!`
+    ];
 
-      const randomIndex = Math.floor(Math.random() * texts.length);
-      return encodeURIComponent(texts[randomIndex]);
+    const randomIndex = Math.floor(Math.random() * texts.length);
+    return encodeURIComponent(texts[randomIndex]);
   }
 
   const text = getRandomShareText(video.username);
   const shareUrls = {
-      whatsapp: `https://api.whatsapp.com/send?text=${text}%20${url}`,
-      telegram: `https://t.me/share/url?url=${url}&text=${text}`,
-      twitter: `https://twitter.com/intent/tweet?text=${text}&url=${url}`,
-      facebook: `https://www.facebook.com/sharer/sharer.php?u=${url}`
+    whatsapp: `https://api.whatsapp.com/send?text=${text}%20${url}`,
+    telegram: `https://t.me/share/url?url=${url}&text=${text}`,
+    twitter: `https://twitter.com/intent/tweet?text=${text}&url=${url}`,
+    facebook: `https://www.facebook.com/sharer/sharer.php?u=${url}`
   };
 
   window.open(shareUrls[platform], '_blank');
@@ -686,12 +681,12 @@ function showToast(message) {
   document.body.appendChild(toast);
 
   requestAnimationFrame(() => {
-      toast.classList.add('active');
+    toast.classList.add('active');
   });
 
   setTimeout(() => {
-      toast.classList.remove('active');
-      setTimeout(() => toast.remove(), 300);
+    toast.classList.remove('active');
+    setTimeout(() => toast.remove(), 300);
   }, 2000);
 }
 
@@ -705,33 +700,33 @@ document.addEventListener('touchstart', (e) => {
   const tapLength = currentTime - lastTap;
 
   if (tapLength < 300 && tapLength > 0) {
-      const container = video.closest('.video-container');
-      const likeButton = container.querySelector('[data-action="like"]');
+    const container = video.closest('.video-container');
+    const likeButton = container.querySelector('[data-action="like"]');
 
-      if (likeButton) {
-          handleAction('like', likeButton, true);
-      }
+    if (likeButton) {
+      handleAction('like', likeButton, true);
+    }
 
-      const touchX = e.changedTouches[0].clientX;
-      const touchY = e.changedTouches[0].clientY;
+    const touchX = e.changedTouches[0].clientX;
+    const touchY = e.changedTouches[0].clientY;
 
-      const heart = document.createElement('ion-icon');
-      heart.name = 'heart';
-      heart.classList.add('heart-icon');
-      document.body.appendChild(heart);
+    const heart = document.createElement('ion-icon');
+    heart.name = 'heart';
+    heart.classList.add('heart-icon');
+    document.body.appendChild(heart);
 
-      heart.style.left = `${touchX - 25}px`;
-      heart.style.top = `${touchY - 25}px`;
+    heart.style.left = `${touchX - 25}px`;
+    heart.style.top = `${touchY - 25}px`;
 
-      setTimeout(() => {
-          heart.classList.add('animate-heart');
-      }, 0);
+    setTimeout(() => {
+      heart.classList.add('animate-heart');
+    }, 0);
 
-      setTimeout(() => {
-          heart.remove();
-      }, 1000);
+    setTimeout(() => {
+      heart.remove();
+    }, 1000);
 
-      e.preventDefault();
+    e.preventDefault();
   }
 
   lastTap = currentTime;
