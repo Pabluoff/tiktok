@@ -267,7 +267,7 @@ body {
 .follow-button {
   position: absolute;
   top: 50px;
-  padding: 6px 8px; 
+  padding: 4px 7px; 
   background: linear-gradient(45deg, #ff345c, #e41654, #ff0090);
   background-size: 200% 200%;
   box-shadow: 0 0 10px rgba(255, 52, 92, 0.8);
@@ -397,25 +397,17 @@ body {
 }
 
 
-.create-button {
-  position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
 .create-button .plus-icon {
-  width: 3rem;
-  height: 3rem;
-  background: linear-gradient(45deg, #ff0050, #ff0050, #ff0050);
+  width: 3.0rem; 
+  height: 2.5rem;
+  background: linear-gradient(45deg, #a1a1a1, #a1a1a1, #a1a1a1);
   border-radius: 0.6rem;
   display: flex;
   align-items: center;
   justify-content: center;
   position: relative;
   z-index: 1;
-  color: white;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  color: rgb(206, 206, 206);
 }
 
 .create-button .plus-icon::before {
@@ -427,17 +419,9 @@ body {
   bottom: 0;
   background: black;
   border-radius: 0.5rem;
-  margin: 2px;
+  margin: 2px; 
   z-index: -1;
 }
-
-.create-button .plus-icon svg {
-  width: 24px;
-  height: 24px;
-  stroke: white;
-  stroke-width: 2;
-}
-
 
 @keyframes heartBeat {
   0% {
