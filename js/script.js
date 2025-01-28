@@ -139,7 +139,7 @@ function createVideoElement(video, isShared = false) {
     <div class="hashtags">${video.hashtags}</div>
     <div class="music">
         <div class="music">
-            <svg class="music-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+            <svg class="music-icon" xmlns="http://www.w3.org/2000/svg" width="13" height="13" fill="currentColor"
                 class="bi bi-music-note-beamed" viewBox="0 0 16 16">
                 <path
                     d="M6 13c0 1.105-1.12 2-2.5 2S1 14.105 1 13s1.12-2 2.5-2 2.5.896 2.5 2m9-2c0 1.105-1.12 2-2.5 2s-2.5-.895-2.5-2 1.12-2 2.5-2 2.5.895 2.5 2" />
@@ -150,7 +150,13 @@ function createVideoElement(video, isShared = false) {
     </div>
   </div>
   <div class="video-actions">
-           <button class="add-button">+</button>
+           <button class="add-button">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M5 12h14" />
+                        <path d="M12 5v14" />
+                    </svg>
+           </button>
             <div class="user-profile">
                 <img src="${video.userProfile}" alt="Profile">
             </div>
