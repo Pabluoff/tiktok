@@ -75,7 +75,7 @@ body {
   scroll-snap-type: y mandatory;
   -ms-overflow-style: none;
   scrollbar-width: none;
-  height: calc(100vh - 90px); 
+  height: calc(100vh - 90px);
 }
 
 .feed::-webkit-scrollbar {
@@ -84,7 +84,7 @@ body {
 
 .video-container {
   position: relative;
-  height: calc(100vh - 90px);
+  height: 100%;
   scroll-snap-align: start;
   scroll-snap-stop: always;
   background-color: black;
@@ -93,18 +93,8 @@ body {
 
 .video-container video {
   position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
   width: 100%;
-  height: auto;
-}
-
-@media (min-aspect-ratio: 16/9) {
-  .video-container video {
-    height: 100%;
-    width: auto;
-  }
+  height: 100%;
 }
 
 .sub-progress-bar {
