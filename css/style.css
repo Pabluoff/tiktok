@@ -84,7 +84,7 @@ body {
 
 .video-container {
   position: relative;
-  height: calc(100vh - 90px); /* Altura da tela menos a navegação inferior */
+  height: 100%;; /* Altura da tela menos a navegação inferior */
   scroll-snap-align: start;
   scroll-snap-stop: always;
   background-color: black;
@@ -92,9 +92,12 @@ body {
 }
 
 .video-container video {
+  top: 0;
+  left: 0;
+  right: 0;
   width: 100%;
-  height: 100%;
-  object-fit: cover; /* Mantém a proporção do vídeo */
+  height: calc(100vh - 90px);
+  object-fit: contain; 
 }
 
 .sub-progress-bar {
