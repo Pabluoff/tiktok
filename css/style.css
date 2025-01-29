@@ -94,7 +94,9 @@ body {
 .video-container video {
   position: absolute;
   width: 100%;
-  height: calc(100vh - 90px);}
+  height: 100%;
+  object-fit: cover;
+}
 
 .sub-progress-bar {
   position: absolute;
