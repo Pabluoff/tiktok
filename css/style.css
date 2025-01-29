@@ -68,14 +68,14 @@ body {
 
 .feed {
   position: fixed;
-  bottom: 90px;
+  top: 0;
   left: 0;
   right: 0;
+  bottom: 90px; 
   overflow-y: scroll;
   scroll-snap-type: y mandatory;
   -ms-overflow-style: none;
   scrollbar-width: none;
-  height: calc(100vh - 90px);
 }
 
 .feed::-webkit-scrollbar {
@@ -84,7 +84,7 @@ body {
 
 .video-container {
   position: relative;
-  height: 100%;
+  height: calc(100vh - 90px);
   scroll-snap-align: start;
   scroll-snap-stop: always;
   background-color: black;
@@ -95,7 +95,7 @@ body {
   position: absolute;
   width: 100%;
   height: 100%;
-  object-fit: contain;
+  object-fit: cover;
 }
 
 .sub-progress-bar {
