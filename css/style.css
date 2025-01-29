@@ -268,14 +268,14 @@ body {
   position: absolute;
   top: 50px;
   padding: 4px 7px; 
-  background: linear-gradient(45deg, #ff345c, #e41654, #ff0090);
+  background: linear-gradient(45deg, #ff0090, #ff345c, #e41654);
+  box-shadow: 0 0 15px rgba(255, 52, 92, 1);
   background-size: 200% 200%;
-  box-shadow: 0 0 10px rgba(255, 52, 92, 0.8);
   border: none;
   color: white;
   font-weight: bold;
   font-size: 11px; 
-  border-radius: 6px;
+  border-radius: 9px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -284,15 +284,8 @@ body {
   animation: gradientAnimation 3s ease infinite;
 }
 
-.follow-button:hover {
-  background: linear-gradient(45deg, #ff0090, #ff345c, #e41654);
-  box-shadow: 0 0 15px rgba(255, 52, 92, 1);
-  transform: scale(1.05);
-  transition: all 0.3s ease;
-}
-
 .follow-button:active {
-  transform: scale(0.95);
+  transform: scale(0.90);
   box-shadow: 0 0 5px rgba(255, 52, 92, 0.8);
   transition: all 0.1s ease;
 }
@@ -445,6 +438,7 @@ body {
   }
 }
 
+/* Estilo do menu de compartilhamento */
 .share-menu {
   position: fixed;
   bottom: 0;
@@ -474,6 +468,7 @@ body {
 .share-menu-title {
   font-size: 1rem;
   font-weight: 600;
+  color: white;
 }
 
 .share-menu-close {
@@ -482,6 +477,15 @@ body {
   color: white;
   cursor: pointer;
   padding: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.share-menu-close svg {
+  width: 24px;
+  height: 24px;
+  stroke: white;
 }
 
 .share-options {
@@ -522,9 +526,17 @@ body {
   background: rgba(255, 255, 255, 0.1);
 }
 
+.share-icon-wrapper svg {
+  width: 24px;
+  height: 24px;
+  fill: white;
+  stroke-width: 2;
+}
+
 .share-option-label {
   font-size: 0.75rem;
   text-align: center;
+  color: white;
 }
 
 .share-link {
@@ -543,6 +555,7 @@ body {
   border: none;
   color: white;
   font-size: 0.9rem;
+  outline: none;
 }
 
 .copy-button {
@@ -576,7 +589,6 @@ body {
   opacity: 1;
   pointer-events: auto;
 }
-
 
 .toast {
   position: fixed;
