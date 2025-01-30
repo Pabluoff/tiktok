@@ -105,17 +105,17 @@ export class ShareMenu {
     const text = this.getRandomShareText();
 
     const shareUrls = {
-      whatsapp: `https://api.whatsapp.com/send?text=${text}%20${shareUrl}`,
-      telegram: `https://t.me/share/url?url=${shareUrl}&text=${text}`,
-      twitter: `https://twitter.com/intent/tweet?text=${text}&url=${shareUrl}`,
-      facebook: `https://www.facebook.com/sharer/sharer.php?u=${shareUrl}`,
+      whatsapp: `https://api.whatsapp.com/send?text=${text}%20${encodeURIComponent(shareUrl)}`,
+      telegram: `https://t.me/share/url?url=${encodeURIComponent(shareUrl)}&text=${text}`,
+      twitter: `https://twitter.com/intent/tweet?text=${text}&url=${encodeURIComponent(shareUrl)}`,
+      facebook: `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}`,
       'instagram-dm': `https://www.instagram.com/direct/inbox/`
     };
 
     if (platform === 'instagram-dm') {
       navigator.clipboard.writeText(shareUrl).then(() => {
         showToast('Link copiado!');
-        window.location.href = shareUrls[platform]; 
+        window.location.href = shareUrls[platform];
       });
     } else {
       window.location.href = shareUrls[platform];
