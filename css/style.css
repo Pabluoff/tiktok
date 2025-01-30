@@ -78,6 +78,19 @@ body {
   scrollbar-width: none;
 }
 
+.feed::-webkit-scrollbar {
+  display: none;
+}
+
+.video-container {
+  position: relative;
+  height: 100%;;
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
+  background-color: black;
+  overflow: hidden;
+}
+
 .play-pause-button {
   position: absolute;
   top: 50%;
@@ -94,7 +107,7 @@ body {
 }
 
 .play-pause-button svg {
-  fill: #ffffffb4;
+  fill: #ffffff65;
   color: transparent;
 }
 
@@ -107,26 +120,13 @@ body {
   opacity: 1;
 }
 
-.feed::-webkit-scrollbar {
-  display: none;
-}
-
-.video-container {
-  position: relative;
-  height: 100%;;
-  scroll-snap-align: start;
-  scroll-snap-stop: always;
-  background-color: black;
-  overflow: hidden;
-}
-
 .video-container video {
   top: 0;
   left: 0;
   right: 0;
   width: 100%;
   height: calc(100vh - 90px);
-  object-fit: contain; 
+  object-fit: cover; 
 }
 
 .sub-progress-bar {
