@@ -320,19 +320,6 @@ class VideoFeed {
   }
 
   initializeEvents() {
-    this.feed.addEventListener('scroll', () => {
-      document.querySelectorAll('.sub-progress-bar').forEach((bar) => {
-        bar.style.opacity = '0';
-      });
-
-      clearTimeout(this.feed.scrollTimeout);
-
-      this.feed.scrollTimeout = setTimeout(() => {
-        document.querySelectorAll('.sub-progress-bar').forEach((bar) => {
-          bar.style.opacity = '1';
-        });
-      }, 300);
-    });
 
     document.addEventListener('click', (e) => {
       const video = e.target.closest('video');

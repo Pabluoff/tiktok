@@ -71,7 +71,7 @@ body {
   top: 0;
   left: 0;
   right: 0;
-  bottom: 90px; /* Ajuste para a altura da navegação inferior */
+  bottom: 90px;
   overflow-y: scroll;
   scroll-snap-type: y mandatory;
   -ms-overflow-style: none;
@@ -84,7 +84,7 @@ body {
 
 .video-container {
   position: relative;
-  height: 100%;; /* Altura da tela menos a navegação inferior */
+  height: 100%;;
   scroll-snap-align: start;
   scroll-snap-stop: always;
   background-color: black;
@@ -442,7 +442,7 @@ body {
   }
 }
 
-/* Estilo do menu de compartilhamento */
+
 .share-menu {
   position: fixed;
   bottom: 0;
