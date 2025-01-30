@@ -78,6 +78,35 @@ body {
   scrollbar-width: none;
 }
 
+.play-pause-button {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: none;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 0.3s ease;
+  opacity: 0;
+}
+
+.play-pause-button svg {
+  fill: #ffffffb4;
+  color: transparent;
+}
+
+
+.video-container:hover .play-pause-button {
+  opacity: 1;
+}
+
+.video-container:not(:has(video:playing)) .play-pause-button {
+  opacity: 1;
+}
+
 .feed::-webkit-scrollbar {
   display: none;
 }

@@ -326,11 +326,6 @@ class VideoFeed {
       const actionButton = e.target.closest('.action-button');
 
       if (video) {
-        if (video.paused) {
-          video.play();
-        } else {
-          video.pause();
-        }
       }
 
       if (actionButton) {

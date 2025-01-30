@@ -10,17 +10,61 @@ export class VideoPlayer {
     this.subProgressBar = container.querySelector('.sub-progress-bar');
     this.videoInfo = container.querySelector('.video-info');
     this.videoActions = container.querySelector('.video-actions');
-    this.feed = document.querySelector('#feed'); 
     this.isInteracting = false;
     this.opacityTimeout = null;
     this.longPressTimeout = null;
+    this.isPlaying = false;
 
+    this.setupPlayPauseButton();
     this.initializeEvents();
+  }
+
+  setupPlayPauseButton() {
+    this.playPauseButton = document.createElement('button');
+    this.playPauseButton.className = 'play-pause-button';
+    this.updatePlayPauseIcon();
+    this.container.appendChild(this.playPauseButton);
+  }
+
+  updatePlayPauseIcon() {
+    this.playPauseButton.innerHTML = this.isPlaying
+      ? ``
+      : `<svg xmlns="http://www.w3.org/2000/svg" width="72" height="72" viewBox="0 0 24 24" fill="white" stroke-linejoin="round">
+            <polygon points="5 3 19 12 5 21 5 3"></polygon>
+         </svg>`;
   }
 
   initializeEvents() {
     this.video.addEventListener('loadedmetadata', () => this.updateTotalTime());
     this.video.addEventListener('timeupdate', () => this.updateProgress());
+    this.video.addEventListener('play', () => {
+      this.isPlaying = true;
+      this.updatePlayPauseIcon();
+    });
+    this.video.addEventListener('pause', () => {
+      this.isPlaying = false;
+      this.updatePlayPauseIcon();
+    });
+
+    // Controle de clique único e duplo
+    let clickTimeout = null;
+    const doubleClickDelay = 300;
+
+    const handleClick = () => {
+      if (clickTimeout) {
+        clearTimeout(clickTimeout);
+        clickTimeout = null;
+        return; // Se houver um segundo clique rápido, ignora a ação
+      }
+
+      clickTimeout = setTimeout(() => {
+        this.togglePlayPause();
+        clickTimeout = null;
+      }, doubleClickDelay);
+    };
+
+    this.video.addEventListener('click', handleClick);
+    this.playPauseButton.addEventListener('click', handleClick);
 
     if (this.subProgressBar) {
       this.subProgressBar.addEventListener('mousedown', (event) => this.startInteraction(event));
@@ -32,30 +76,32 @@ export class VideoPlayer {
       document.addEventListener('touchend', () => this.stopInteraction());
     }
 
-    if (this.feed) {
-      this.feed.addEventListener('scroll', () => {
-        this.adjustOpacity(true, true); 
-        clearTimeout(this.opacityTimeout);
-        this.opacityTimeout = setTimeout(() => this.adjustOpacity(false, false), 100); 
-      });
-    }
+    this.container.addEventListener('scroll', () => {
+      this.adjustOpacity(true, true);
+      clearTimeout(this.opacityTimeout);
+      this.opacityTimeout = setTimeout(() => this.adjustOpacity(false, false), 500);
+    });
 
     this.container.addEventListener('touchstart', (event) => {
       if (!event.target.closest('.sub-progress-bar')) {
         this.longPressTimeout = setTimeout(() => {
-          this.adjustOpacity(true, false); 
+          this.adjustOpacity(true, false);
         }, 600);
       }
     });
 
     this.container.addEventListener('touchend', () => {
       clearTimeout(this.longPressTimeout);
-      this.adjustOpacity(false, false); 
+      this.adjustOpacity(false, false);
     });
   }
 
+  togglePlayPause() {
+    this.isPlaying ? this.pause() : this.play();
+  }
+
   adjustOpacity(reduce = true, instant = false) {
-    const opacityValue = reduce ? 0 : 1; 
+    const opacityValue = reduce ? 0 : 1;
     const transitionStyle = instant ? 'none' : 'opacity 0.3s ease';
 
     if (this.subProgressBar) {
@@ -129,9 +175,13 @@ export class VideoPlayer {
 
   play() {
     this.video.play();
+    this.isPlaying = true;
+    this.updatePlayPauseIcon();
   }
 
   pause() {
     this.video.pause();
+    this.isPlaying = false;
+    this.updatePlayPauseIcon();
   }
 }
