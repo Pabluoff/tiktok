@@ -143,20 +143,26 @@ export class VideoPlayer {
 
   startInteraction(event) {
     this.isInteracting = true;
-    this.video.pause();
+    this.video.pause(); // Pausa o vídeo durante a interação
     this.subProgressBar.classList.add('interacting');
     this.container.querySelectorAll('.video-info, .video-actions, .shared-badge-container').forEach(el => el.classList.add('hidden'));
     this.container.querySelector('.time-display').classList.add('visible');
     this.updateProgressInteraction(event);
+
+    // Bloqueia o scroll durante a interação
+    document.body.style.overflow = 'hidden';
   }
 
   stopInteraction() {
     if (this.isInteracting) {
       this.isInteracting = false;
-      this.video.play();
+      this.video.play(); // Retoma o vídeo após a interação
       this.subProgressBar.classList.remove('interacting');
       this.container.querySelectorAll('.video-info, .video-actions, .shared-badge-container').forEach(el => el.classList.remove('hidden'));
       this.container.querySelector('.time-display').classList.remove('visible');
+
+      // Restaura o scroll após a interação
+      document.body.style.overflow = 'auto';
     }
   }
 
