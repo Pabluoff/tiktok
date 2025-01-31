@@ -16,6 +16,7 @@ export class VideoPlayer {
     this.isPlaying = false;
 
     this.setupPlayPauseButton();
+    this.setupTouchArea(); // Configura a área de toque ampliada
     this.initializeEvents();
   }
 
@@ -24,6 +25,23 @@ export class VideoPlayer {
     this.playPauseButton.className = 'play-pause-button';
     this.updatePlayPauseIcon();
     this.container.appendChild(this.playPauseButton);
+  }
+
+  setupTouchArea() {
+    // Cria uma div para a área de toque ampliada
+    this.touchArea = document.createElement('div');
+    this.touchArea.className = 'touch-area';
+    this.container.appendChild(this.touchArea);
+
+    // A área de toque cobre todo o container do vídeo/feed
+    const rect = this.container.getBoundingClientRect();
+    this.touchArea.style.position = 'absolute';
+    this.touchArea.style.top = `${rect.top}px`;
+    this.touchArea.style.left = `${rect.left}px`;
+    this.touchArea.style.width = `${rect.width}px`;
+    this.touchArea.style.height = `${rect.height}px`;
+    this.touchArea.style.backgroundColor = 'transparent'; // Área invisível
+    this.touchArea.style.zIndex = '10'; // Garante que a área de toque fique acima da barra
   }
 
   updatePlayPauseIcon() {
@@ -66,33 +84,40 @@ export class VideoPlayer {
     this.video.addEventListener('click', handleClick);
     this.playPauseButton.addEventListener('click', handleClick);
 
-    if (this.subProgressBar) {
-      this.subProgressBar.addEventListener('mousedown', (event) => this.startInteraction(event));
-      this.subProgressBar.addEventListener('mousemove', (event) => this.updateProgressInteraction(event));
+    // Adiciona eventos de interação à área de toque ampliada
+    if (this.touchArea) {
+      this.touchArea.addEventListener('mousedown', (event) => this.startInteraction(event));
+      this.touchArea.addEventListener('mousemove', (event) => this.updateProgressInteraction(event));
       document.addEventListener('mouseup', () => this.stopInteraction());
 
-      this.subProgressBar.addEventListener('touchstart', (event) => this.startInteraction(event));
-      this.subProgressBar.addEventListener('touchmove', (event) => this.updateProgressInteraction(event));
+      this.touchArea.addEventListener('touchstart', (event) => this.startInteraction(event));
+      this.touchArea.addEventListener('touchmove', (event) => this.updateProgressInteraction(event));
       document.addEventListener('touchend', () => this.stopInteraction());
     }
 
     this.container.addEventListener('scroll', () => {
-      this.adjustOpacity(true, true);
-      clearTimeout(this.opacityTimeout);
-      this.opacityTimeout = setTimeout(() => this.adjustOpacity(false, false), 500);
+      if (!this.isInteracting) {
+        this.adjustOpacity(true, true);
+        clearTimeout(this.opacityTimeout);
+        this.opacityTimeout = setTimeout(() => this.adjustOpacity(false, false), 500);
+      }
     });
 
     this.container.addEventListener('touchstart', (event) => {
       if (!event.target.closest('.sub-progress-bar')) {
         this.longPressTimeout = setTimeout(() => {
-          this.adjustOpacity(true, false);
+          if (!this.isInteracting) {
+            this.adjustOpacity(true, false);
+          }
         }, 600);
       }
     });
 
     this.container.addEventListener('touchend', () => {
       clearTimeout(this.longPressTimeout);
-      this.adjustOpacity(false, false);
+      if (!this.isInteracting) {
+        this.adjustOpacity(false, false);
+      }
     });
   }
 
@@ -101,6 +126,8 @@ export class VideoPlayer {
   }
 
   adjustOpacity(reduce = true, instant = false) {
+    if (this.isInteracting) return; // Não ajusta a opacidade durante a interação
+
     const opacityValue = reduce ? 0 : 1;
     const transitionStyle = instant ? 'none' : 'opacity 0.3s ease';
 
@@ -147,7 +174,12 @@ export class VideoPlayer {
     this.subProgressBar.classList.add('interacting');
     this.container.querySelectorAll('.video-info, .video-actions, .shared-badge-container').forEach(el => el.classList.add('hidden'));
     this.container.querySelector('.time-display').classList.add('visible');
+    this.playPauseButton.style.display = 'none'; // Oculta o botão de play/pause
     this.updateProgressInteraction(event);
+
+    // Cancela o timer de ajuste de opacidade
+    clearTimeout(this.opacityTimeout);
+    clearTimeout(this.longPressTimeout);
 
     // Bloqueia o scroll durante a interação
     document.body.style.overflow = 'hidden';
@@ -160,6 +192,8 @@ export class VideoPlayer {
       this.subProgressBar.classList.remove('interacting');
       this.container.querySelectorAll('.video-info, .video-actions, .shared-badge-container').forEach(el => el.classList.remove('hidden'));
       this.container.querySelector('.time-display').classList.remove('visible');
+      this.playPauseButton.style.display = 'block'; // Exibe o botão de play/pause
+      this.updatePlayPauseIcon();
 
       // Restaura o scroll após a interação
       document.body.style.overflow = 'auto';
